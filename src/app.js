@@ -1,26 +1,21 @@
 const express=require("express");
-
 const app=express();
-
 const port =7777;
 
-// app.use("/",(req,res)=>{
-//     res.send("home");
-// })
+const {adminAuth}=require("./middlewares/auth.js");
 
+app.use("/admin",adminAuth);
 
-app.use("/hello",(req,res)=>{
-    res.send("hello");
+app.get('/admin/getData',(req,res)=>{
+    res.send("all data sent sucessfully");
 })
 
-app.use("/test",(req,res)=>{
-    res.send("test");
+app.get("/admin/deleteUser",(req,res)=>{
+    res.send("user deleted sucessfully");
 })
 
 
-app.use("/hello/ancd",(req,res)=>{
-    res.send("fgjklrd");
-})
+
 
 app.listen(port,()=>{
     console.log(`server listening on port ${port}`);
