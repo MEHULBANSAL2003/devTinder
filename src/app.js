@@ -1,7 +1,35 @@
 const express=require("express");
 const { connectDB } = require("./config/database.js");
-const app=express();
+const User=require("./models/user.js")
+const app=express();    
 const port =7777;
+
+
+
+app.post("/signup",async (req,res)=>{
+
+    const userObj={
+        firstName:"Mehul",
+        lastName:"Bansal",
+        emailId:"mehul@bansal.com",
+        password:"Mehul@123"
+    }
+
+    const user=new User(userObj);
+
+    await user.save();
+
+    res.send("user added successfully");
+
+
+})
+
+
+
+
+
+
+
 
 
 connectDB()
