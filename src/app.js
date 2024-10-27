@@ -17,10 +17,14 @@ app.post("/signup",async (req,res)=>{
 
     const user=new User(userObj);
 
+    try{
     await user.save();
 
     res.send("user added successfully");
-
+    }
+    catch(err){
+        res.status(400).send("an error occured ", err);
+    }
 
 })
 
