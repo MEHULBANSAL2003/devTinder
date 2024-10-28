@@ -14,7 +14,7 @@ app.post("/signup",async (req,res)=>{
      console.log(obj);
     const user=new User(obj);
 
-    await user.save();
+    // await user.save();
     // const userObj={
     //     firstName:"Mehul",
     //     lastName:"Bansal",
@@ -24,17 +24,33 @@ app.post("/signup",async (req,res)=>{
 
     // const user=new User(userObj);
 
-    // try{
-    // await user.save();
+    try{
+    await user.save();
 
-    // res.send("user added successfully");
-    // }
-    // catch(err){
-    //     res.status(400).send("an error occured ", err);
-    // }
+    res.send("user added successfully");
+    }
+    catch(err){
+        res.status(400).send("an error occured ", err);
+    }
 
 })
 
+
+app.get("/feed",async (req,res)=>{
+  
+  try{
+  const data=await User.find();
+  if(data.length===0){
+    res.status(404).send("no user found");
+  }else{
+  res.send(data);
+  }  
+}
+  catch(err){
+    console.log("something went wrong", err);
+  }
+  
+})
 
 
 
