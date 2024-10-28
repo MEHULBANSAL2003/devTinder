@@ -3,15 +3,16 @@ const express = require("express");
 const app = express();
 const { connectDB } = require("./config/database.js");
 const User = require("./models/user.js");
-const { validateSignUpData,validateLoginData} = require("./utils/validation.js");
+const {
+  validateSignUpData,
+  validateLoginData,
+} = require("./utils/validation.js");
 const bcrypt = require("bcrypt");
-const cookieParser=require("cookie-parser");
-
-
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 
 app.use(express.json()); // middleware to parse the data to json from client;
 app.use(cookieParser());
-
 
 app.post("/signup", async (req, res) => {
   // validating the data
@@ -58,11 +59,20 @@ app.post("/login", async (req, res) => {
     const storedPassword = user[0].password;
 
     const isPasswordValid = await bcrypt.compare(password, storedPassword);
-    if (!isPasswordValid) {
+    if (isPasswordValid) {
+      // create a jwt token
+
+      const token = await jwt.sign(
+        { _id: user[0]._id },
+        process.env.JWT_SECRET_KEY
+      );
+
+      // add token to cookie and send it back to the user
+      res.cookie("token", token);
+      res.send("logged in successfully");
+    } else {
       throw new Error("password is incorrect");
     }
-      res.cookie("token","jkjdsndksjnsdcdscnjjdskvndskvndsjkvbdfuvbj");
-    res.send("logged in successfully");
   } catch (err) {
     res.status(400).send("ERROR : " + err);
   }
@@ -117,15 +127,31 @@ app.patch("/user/:userId", async (req, res) => {
   }
 });
 
-app.get("/profile",(req,res)=>{
+app.get("/profile", async (req, res) => {
 
-  const cookies=req.cookies;
+  try{
+  const cookies = req.cookies;
 
-  console.log(cookies);
+  const { token } = cookies;
+  if(!token){
+    throw new Error("invalid token")
+  }
 
-  res.send("cookies sent");
+  const decodedMessage = await jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-})
+  const {_id}=decodedMessage; 
+
+  const user=await User.findById(_id);
+  if(!user){
+    throw new Error("user doesnt exists");
+  }
+
+  res.send(user);
+  }
+  catch(err){
+    res.status(400).send("ERROR : "+err);
+  }
+});
 
 connectDB()
   .then(() => {
