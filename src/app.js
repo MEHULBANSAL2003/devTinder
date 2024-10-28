@@ -1,13 +1,17 @@
 require("dotenv").config();
 const express = require("express");
+const app = express();
 const { connectDB } = require("./config/database.js");
 const User = require("./models/user.js");
 const { validateSignUpData,validateLoginData} = require("./utils/validation.js");
 const bcrypt = require("bcrypt");
-const app = express();
-const port = process.env.PORT;
+const cookieParser=require("cookie-parser");
+
+
 
 app.use(express.json()); // middleware to parse the data to json from client;
+app.use(cookieParser());
+
 
 app.post("/signup", async (req, res) => {
   // validating the data
@@ -57,7 +61,7 @@ app.post("/login", async (req, res) => {
     if (!isPasswordValid) {
       throw new Error("password is incorrect");
     }
-
+      res.cookie("token","jkjdsndksjnsdcdscnjjdskvndskvndsjkvbdfuvbj");
     res.send("logged in successfully");
   } catch (err) {
     res.status(400).send("ERROR : " + err);
@@ -113,12 +117,21 @@ app.patch("/user/:userId", async (req, res) => {
   }
 });
 
+app.get("/profile",(req,res)=>{
+
+  const cookies=req.cookies;
+
+  console.log(cookies);
+
+  res.send("cookies sent");
+
+})
 
 connectDB()
   .then(() => {
     console.log("connected to db succesfuly");
-    app.listen(port, () => {
-      console.log(`server listening on port ${port}`);
+    app.listen(process.env.PORT, () => {
+      console.log(`server listening on port ${process.env.PORT}`);
     });
   })
   .catch((err) => {
