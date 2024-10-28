@@ -34,10 +34,31 @@ app.get("/feed", async (req, res) => {
   }
 });
 
-app.patch("/user", async (req, res) => {
-  const userId = req.body.userId;
+app.patch("/user/:userId", async (req, res) => {
+  const userId = req.params?.userId;
   const data = req.body;
   try {
+    const isAllowedUpdates = [
+      "gender",
+      "age",
+      "photoUrl",
+      "about",
+      "gender",
+      "skills",
+    ];
+
+    const updates = Object.keys(data).every((k) => {
+      return isAllowedUpdates.includes(k);
+    });
+    console.log(updates);
+
+    if (!updates) {
+      throw new Error("cannot update the field");
+    }
+
+    if (data?.skills?.length > 10) {
+      throw new Error("max 10 skills can be added");
+    }
     const user = await User.findByIdAndUpdate(userId, data, {
       returnDocument: "after",
       runValidators: true,
