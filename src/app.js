@@ -4,29 +4,37 @@ const User=require("./models/user.js")
 const app=express();    
 const port =7777;
 
-
+app.use(express.json()); // middleware to parse the data to json from client;
 
 app.post("/signup",async (req,res)=>{
 
-    const userObj={
-        firstName:"Mehul",
-        lastName:"Bansal",
-        emailId:"mehul@bansal.com",
-        password:"Mehul@123"
-    }
 
-    const user=new User(userObj);
+     //console.log(req.body);
+     const obj=req.body;
+     console.log(obj);
+    const user=new User(obj);
 
-    try{
     await user.save();
+    // const userObj={
+    //     firstName:"Mehul",
+    //     lastName:"Bansal",
+    //     emailId:"mehul@bansal.com",
+    //     password:"Mehul@123"
+    // }
 
-    res.send("user added successfully");
-    }
-    catch(err){
-        res.status(400).send("an error occured ", err);
-    }
+    // const user=new User(userObj);
+
+    // try{
+    // await user.save();
+
+    // res.send("user added successfully");
+    // }
+    // catch(err){
+    //     res.status(400).send("an error occured ", err);
+    // }
 
 })
+
 
 
 
