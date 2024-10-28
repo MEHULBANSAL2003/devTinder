@@ -1,13 +1,11 @@
+require("dotenv").config();
 const express = require("express");
 const { connectDB } = require("./config/database.js");
 const User = require("./models/user.js");
-const {
-  validateSignUpData,
-  validateLoginData,
-} = require("./utils/validation.js");
+const { validateSignUpData,validateLoginData} = require("./utils/validation.js");
 const bcrypt = require("bcrypt");
 const app = express();
-const port = 7777;
+const port = process.env.PORT;
 
 app.use(express.json()); // middleware to parse the data to json from client;
 
