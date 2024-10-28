@@ -1,23 +1,68 @@
 const express = require("express");
 const { connectDB } = require("./config/database.js");
 const User = require("./models/user.js");
+const {
+  validateSignUpData,
+  validateLoginData,
+} = require("./utils/validation.js");
+const bcrypt = require("bcrypt");
 const app = express();
 const port = 7777;
 
 app.use(express.json()); // middleware to parse the data to json from client;
 
 app.post("/signup", async (req, res) => {
-  const obj = req.body;
-  console.log(obj);
-
+  // validating the data
   try {
-    const user = new User(obj);
+    validateSignUpData(req);
+
+    const { firstName, lastName, emailId, password } = req.body;
+
+    const registeredUser = await User.find({ emailId: emailId });
+    if (registeredUser.length > 0) {
+      throw new Error("user already registered");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log(hashedPassword);
+
+    const obj = req.body;
+
+    const user = new User({
+      firstName,
+      lastName,
+      emailId,
+      password: hashedPassword,
+    });
     await user.save();
     console.log(user);
 
     res.send("user added successfully");
   } catch (err) {
-    res.status(400).send("an error occured " + err);
+    res.status(400).send("ERROR : " + err);
+  }
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    const { emailId, password } = req.body;
+
+    validateLoginData(req);
+    const user = await User.find({ emailId: emailId });
+    if (user.length === 0) {
+      throw new Error("user not registered");
+    }
+
+    const storedPassword = user[0].password;
+
+    const isPasswordValid = await bcrypt.compare(password, storedPassword);
+    if (!isPasswordValid) {
+      throw new Error("password is incorrect");
+    }
+
+    res.send("logged in successfully");
+  } catch (err) {
+    res.status(400).send("ERROR : " + err);
   }
 });
 
@@ -69,6 +114,7 @@ app.patch("/user/:userId", async (req, res) => {
     res.status(400).send("an error occured " + err);
   }
 });
+
 
 connectDB()
   .then(() => {
