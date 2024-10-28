@@ -1,4 +1,5 @@
 const mongoose=require("mongoose");
+const validator=require("validator");
 
 const {Schema}=mongoose;
 
@@ -21,10 +22,20 @@ const userSchema= new Schema({
         required:true,
         unique:true,
         trim:true,
+        validate(value){
+            if(!validator.isEmail(value)){
+                throw new Error("Invalid email address "+ value);
+            }
+        }
     },
     password:{
         type:String,
-        required:true
+        required:true,
+        validate(value){
+            if(!validator.isStrongPassword(value)){
+                throw new Error("enter the strong password");
+            }
+        }
     },
     age:{
         type:Number,
@@ -44,6 +55,11 @@ const userSchema= new Schema({
     photoUrl:{
         type:String,
         default:"https://img.freepik.com/premium-vector/businessman-avatar-illustration-cartoon-user-portrait-user-profile-icon_118339-4382.jpg",
+        validate(value){
+            if(!validator.isURL(value)){
+                throw new Error("invalid URL "+ value);
+            }
+        }
     },
     about:{
         type:String,
