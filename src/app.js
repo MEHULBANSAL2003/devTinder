@@ -3,26 +3,19 @@ const express = require("express");
 const app = express();
 const { connectDB } = require("./config/database.js");
 const User = require("./models/user.js");
-const {
-  validateSignUpData,
-  validateLoginData,
-} = require("./utils/validation.js");
+const {validateSignUpData,validateLoginData,} = require("./utils/validation.js");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
-const {userAuth}=require("./middlewares/auth.js");
+const { userAuth } = require("./middlewares/auth.js");
 
 app.use(express.json()); // middleware to parse the data to json from client;
 app.use(cookieParser());
-
-
-
 
 app.post("/signup", async (req, res) => {
   // validating the data
   try {
     validateSignUpData(req);
-
     const { firstName, lastName, emailId, password } = req.body;
 
     const registeredUser = await User.find({ emailId: emailId });
@@ -31,7 +24,6 @@ app.post("/signup", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
 
     const obj = req.body;
 
@@ -42,8 +34,6 @@ app.post("/signup", async (req, res) => {
       password: hashedPassword,
     });
     await user.save();
-    console.log(user);
-
     res.send("user added successfully");
   } catch (err) {
     res.status(400).send("ERROR : " + err);
@@ -55,25 +45,21 @@ app.post("/login", async (req, res) => {
     const { emailId, password } = req.body;
 
     validateLoginData(req);
-    const user = await User.find({ emailId: emailId });
-    if (user.length === 0) {
+    const user = await User.findOne({ emailId: emailId });
+    if (!user) {
       throw new Error("user not registered.Sign up first");
     }
 
-    const storedPassword = user[0].password;
-
-    const isPasswordValid = await bcrypt.compare(password, storedPassword);
+    const isPasswordValid = await user.validatePassword(password);
     if (isPasswordValid) {
       // create a jwt token
 
-      const token = await jwt.sign(
-        { _id: user[0]._id },
-        process.env.JWT_SECRET_KEY,
-        {expiresIn:"1d"}
-      );
+      const token = await user.getJWT();
 
       // add token to cookie and send it back to the user
-      res.cookie("token", token,{expires:new Date(Date.now()+1*3600000)});
+      res.cookie("token", token, {
+        expires: new Date(Date.now() + 1 * 3600000),
+      });
       res.send("logged in successfully");
     } else {
       throw new Error("password is incorrect");
@@ -82,9 +68,6 @@ app.post("/login", async (req, res) => {
     res.status(400).send("ERROR : " + err);
   }
 });
-
-
-
 
 app.get("/feed", async (req, res) => {
   try {
@@ -135,13 +118,10 @@ app.patch("/user/:userId", async (req, res) => {
   }
 });
 
-app.get("/profile",userAuth, async (req, res) => {
-
-  const user=req.user;
+app.get("/profile", userAuth, async (req, res) => {
+  const user = req.user;
 
   res.send(user);
-
- 
 });
 
 connectDB()
