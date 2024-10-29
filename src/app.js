@@ -68,7 +68,8 @@ app.post("/login", async (req, res) => {
 
       const token = await jwt.sign(
         { _id: user[0]._id },
-        process.env.JWT_SECRET_KEY
+        process.env.JWT_SECRET_KEY,
+        {expiresIn:"1d"}
       );
 
       // add token to cookie and send it back to the user
