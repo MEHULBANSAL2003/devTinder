@@ -73,7 +73,7 @@ app.post("/login", async (req, res) => {
       );
 
       // add token to cookie and send it back to the user
-      res.cookie("token", token);
+      res.cookie("token", token,{expires:new Date(Date.now()+1*3600000)});
       res.send("logged in successfully");
     } else {
       throw new Error("password is incorrect");
