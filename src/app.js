@@ -10,9 +10,13 @@ const {
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const {userAuth}=require("./middlewares/auth.js");
 
 app.use(express.json()); // middleware to parse the data to json from client;
 app.use(cookieParser());
+
+
+
 
 app.post("/signup", async (req, res) => {
   // validating the data
@@ -53,7 +57,7 @@ app.post("/login", async (req, res) => {
     validateLoginData(req);
     const user = await User.find({ emailId: emailId });
     if (user.length === 0) {
-      throw new Error("user not registered");
+      throw new Error("user not registered.Sign up first");
     }
 
     const storedPassword = user[0].password;
@@ -77,6 +81,9 @@ app.post("/login", async (req, res) => {
     res.status(400).send("ERROR : " + err);
   }
 });
+
+
+
 
 app.get("/feed", async (req, res) => {
   try {
@@ -127,30 +134,13 @@ app.patch("/user/:userId", async (req, res) => {
   }
 });
 
-app.get("/profile", async (req, res) => {
+app.get("/profile",userAuth, async (req, res) => {
 
-  try{
-  const cookies = req.cookies;
-
-  const { token } = cookies;
-  if(!token){
-    throw new Error("invalid token")
-  }
-
-  const decodedMessage = await jwt.verify(token, process.env.JWT_SECRET_KEY);
-
-  const {_id}=decodedMessage; 
-
-  const user=await User.findById(_id);
-  if(!user){
-    throw new Error("user doesnt exists");
-  }
+  const user=req.user;
 
   res.send(user);
-  }
-  catch(err){
-    res.status(400).send("ERROR : "+err);
-  }
+
+ 
 });
 
 connectDB()
