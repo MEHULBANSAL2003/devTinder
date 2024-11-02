@@ -1,6 +1,6 @@
 const express = require("express");
-const bcrypt=require("bcrypt");
-const { validateProfileEditData,validateEditPassword } = require("../utils/validation.js");
+const bcrypt = require("bcrypt");
+const {validateProfileEditData,validateEditPassword} = require("../utils/validation.js");
 
 const profileRouter = express.Router();
 
@@ -48,25 +48,19 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
 
 profileRouter.patch("/profile/password", userAuth, async (req, res) => {
   try {
-    
-     validateEditPassword(req); 
+    validateEditPassword(req);
 
-    const currUser=req.user;
-    const hashedPassword=await bcrypt.hash(req.body.password,10)
+    const currUser = req.user;
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-    currUser.password= hashedPassword;
+    currUser.password = hashedPassword;
 
     await currUser.save();
 
-
-       res.json({
-        result:"success",
-        message:currUser
-       })
-    
-     
-
-
+    res.json({
+      result: "success",
+      message: currUser,
+    });
   } catch (err) {
     res.status(400).json({
       result: "error",
