@@ -9,9 +9,15 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
     const user = req.user;
 
-    res.send(user);
+    res.json({
+      result: "success",
+      message: user,
+    });
   } catch (err) {
-    res.status(400).send("ERROR : " + err);
+    res.status(400).json({
+      result: "error",
+      message: `ERROR : ${err}`,
+    });
   }
 });
 
@@ -32,7 +38,20 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
       data: currUser,
     });
   } catch (err) {
-    res.status(400).send("ERROR : " + err);
+    res.status(400).json({
+      result: "error",
+      message: `ERROR : ${err}`,
+    });
+  }
+});
+
+profileRouter.patch("/profile/password", userAuth, async (req, res) => {
+  try {
+  } catch (err) {
+    res.status(400).json({
+      result: "error",
+      message: `ERROR : ${err}`,
+    });
   }
 });
 
