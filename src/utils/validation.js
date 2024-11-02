@@ -1,5 +1,6 @@
 const validator=require("validator");
 
+
 const validateSignUpData=(req)=>{
 
     const {firstName,lastName,emailId,password}=req.body;
@@ -42,4 +43,18 @@ const validateProfileEditData=(req)=>{
 
 }
 
-module.exports={validateSignUpData,validateLoginData,validateProfileEditData};
+const validateEditPassword=(req)=>{
+   if(!req.body.password){
+      throw new Error("please enter the password");
+   }
+   
+   const {password}=req.body;
+
+   if(!validator.isStrongPassword(password)){
+      throw new Error("enter the strong password");
+   } 
+
+
+}
+
+module.exports={validateSignUpData,validateLoginData,validateProfileEditData,validateEditPassword};
