@@ -34,7 +34,7 @@ const validateLoginData=(req)=>{
 const validateProfileEditData=(req)=>{
 
    
-   const allowedEditFeilds=["firstName","lastName","photoURL","age","about","gender","skills"];
+   const allowedEditFeilds=["firstName","lastName","photoUrl","age","about","gender","skills"];
 
    const isEditAllowed= Object.keys(req.body).every(field=>allowedEditFeilds.includes(field));
 
