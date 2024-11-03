@@ -43,7 +43,15 @@ const connections=await ConnectionRequestModel.find({
 }).populate("toUserId", "firstName lastName")
 .populate("fromUserId", "firstName lastName");
 
-const data=connections.map((row)=>row.fromUserId);
+console.log(connections);
+
+const data=connections.map((row)=>{
+    if(row.fromUserId._id.equals(currUser._id)){
+        return row.toUserId;
+    }
+
+    return row.fromUserId;
+});
 
 res.json({
     result:"success",
