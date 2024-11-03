@@ -8,6 +8,7 @@ app.use(express.json()); // middleware to parse the data to json from client;
 app.use(cookieParser());
 const {authRouter}=require("./routers/auth.js");
 const {profileRouter}=require("./routers/profile.js");
+const {requestRouter}=require("./routers/requests.js");
 
 
 
@@ -15,6 +16,8 @@ const {profileRouter}=require("./routers/profile.js");
 app.use("/",authRouter);
 
 app.use("/",profileRouter);
+
+app.use("/",requestRouter);
 
 
 
