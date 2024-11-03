@@ -1,7 +1,10 @@
 const express = require("express");
 const { userAuth } = require("../middlewares/auth");
 const ConnectionRequestModel = require("../models/connectionRequests");
-const { validateSendConnectionRequestData } = require("../utils/validation");
+const {
+  validateSendConnectionRequestData,
+  validateRequestReviewData,
+} = require("../utils/validation");
 
 const requestRouter = express.Router();
 
@@ -38,4 +41,31 @@ requestRouter.post(
   }
 );
 
+requestRouter.post(
+  "/request/review/:status/:requestId",
+  userAuth,
+  async (req, res) => {
+    try {
+      await validateRequestReviewData(req);
+
+      //const request=await ConnectionRequestModel.findByIdAndUpdate(req.params.requestId,{status:req.params.status});
+      const request = req.request;
+
+      request.status = req.params.status;
+
+      const data = await request.save();
+
+      res.json({
+        result: "sucess",
+        message: `connection request ${req.params.status}`,
+        data: data,
+      });
+    } catch (err) {
+      res.status(400).json({
+        result: "error",
+        message: `ERROR : ${err.message}`,
+      });
+    }
+  }
+);
 module.exports = { requestRouter };

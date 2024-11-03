@@ -97,10 +97,50 @@ const validateSendConnectionRequestData = async (req) => {
   }
 };
 
+const validateRequestReviewData = async (req) => {
+  // toUserid should be the logged in id to accept or reject the request
+  // requestId shoulbe be valid
+  // request can only be accepted or rejected if status is interested
+  // allowed status are accepted or rejected
+
+  const currUser = req.user;
+  const requestId = req.params.requestId;
+  const status = req.params.status;
+  const request = await ConnectionRequestModel.findById(requestId);
+  if (!request) {
+    throw new Error("invalid request id");
+  }
+
+  
+  const toUserId = request.toUserId;
+
+  if (!currUser.equals(toUserId)) {
+    throw new Error("you are not logged in.");
+  }
+
+  const allowedStatus = ["accepted", "rejected"];
+
+  if (!allowedStatus.includes(status)) {
+    throw new Error(`invalid status type : ${status}`);
+  }
+
+  
+
+ 
+
+
+  if (request.status !== "interested") {
+    throw new Error("not allowed to change the status");  
+  }
+
+  req.request = request;
+};
+
 module.exports = {
   validateSignUpData,
   validateLoginData,
   validateProfileEditData,
   validateEditPassword,
   validateSendConnectionRequestData,
+  validateRequestReviewData,
 };
