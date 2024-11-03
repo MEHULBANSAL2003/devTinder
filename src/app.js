@@ -9,6 +9,7 @@ app.use(cookieParser());
 const {authRouter}=require("./routers/auth.js");
 const {profileRouter}=require("./routers/profile.js");
 const {requestRouter}=require("./routers/requests.js");
+const {userRouter}=require("./routers/user.js");
 
 
 
@@ -18,6 +19,8 @@ app.use("/",authRouter);
 app.use("/",profileRouter);
 
 app.use("/",requestRouter);
+
+app.use("/",userRouter);
 
 
 
