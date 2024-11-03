@@ -1,6 +1,7 @@
 const express = require("express");
 const userRouter = express.Router();
 const ConnectionRequestModel = require("../models/connectionRequests");
+const User=require("../models/user");
 
 const { userAuth } = require("../middlewares/auth");
 
@@ -62,6 +63,57 @@ res.json({
 
 }
 catch (err) {
+    res.status(400).json({
+      result: "error",
+      message: `ERROR : ${err.message}`,
+    });
+  }
+
+})
+
+userRouter.get("/user/feed",userAuth,async (req,res)=>{
+  try{
+    //user should see every card except his own... the one who are already friend and one whom he rejected or ignored already
+
+
+    const currUser=req.user;
+
+     const connections=await ConnectionRequestModel.find({
+      $or:[
+        {toUserId:currUser._id},
+        {fromUserId:currUser._id}
+      ]
+     });
+
+    // console.log(connections);
+     let notRequiredIds=[];
+     notRequiredIds.push(currUser._id);
+
+     connections.map((row)=>{
+      if(row.fromUserId.toString()===currUser._id.toString()){
+           notRequiredIds.push(row.toUserId);
+      }
+      else{
+        notRequiredIds.push(row.fromUserId);
+      }
+     });
+
+     console.log(notRequiredIds);
+
+     const data=await User.find({
+      _id:{$nin:notRequiredIds}
+     }).select("-password -email -createdAt -updatedAt -__v -_id")
+
+     console.log(data);
+
+     res.json({
+      result:"success",
+      message:"all the users are fetched successfully",
+      data:data
+     })
+
+  }
+  catch (err) {
     res.status(400).json({
       result: "error",
       message: `ERROR : ${err.message}`,
