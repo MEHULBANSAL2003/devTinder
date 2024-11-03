@@ -28,4 +28,38 @@ userRouter.get("/user/requests/recieved", userAuth, async (req, res) => {
   }
 });
 
+
+// get all the connections of loggedin user
+userRouter.get("/user/connection",userAuth,async (req,res)=>{
+try{
+
+const currUser=req.user;
+
+const connections=await ConnectionRequestModel.find({
+    $or:[
+        {toUserId:currUser._id,status:"accepted"},
+        {fromUserId:currUser._id,status:"accepted"}
+    ]
+}).populate("toUserId", "firstName lastName")
+.populate("fromUserId", "firstName lastName");
+
+const data=connections.map((row)=>row.fromUserId);
+
+res.json({
+    result:"success",
+    message:"succefully fetched the connections",
+    data:data
+})
+
+
+}
+catch (err) {
+    res.status(400).json({
+      result: "error",
+      message: `ERROR : ${err.message}`,
+    });
+  }
+
+})
+
 module.exports = { userRouter };
