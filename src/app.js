@@ -18,7 +18,7 @@ app.use("/",profileRouter);
 
 
 
-// app.get("/feed", async (req, res) => {
+
 //   try {
 //     const data = await User.find();
 //     if (data.length === 0) {
