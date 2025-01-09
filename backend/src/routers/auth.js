@@ -62,6 +62,7 @@ authRouter.post("/login", async (req, res) => {
       res.json({
         result: "success",
         message: "logged in successfully",
+        data:user
       });
     } else {
       throw new Error("password is incorrect");

@@ -22,7 +22,8 @@ const Login = () => {
         data:{
           emailId:emailId,
           password:password
-        }
+        },
+        withCredentials:true 
 
       })
       

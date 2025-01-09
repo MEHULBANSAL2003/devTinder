@@ -13,7 +13,10 @@ const {requestRouter}=require("./src/routers/requests.js");
 const {userRouter}=require("./src/routers/user.js");
 
 
-app.use(cors());
+app.use(cors({
+  origin:"http://localhost:5173",
+  credentials:true
+}));
 
 
 app.use("/",authRouter);
