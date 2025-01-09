@@ -3,6 +3,7 @@ import { validateLoginData } from "../utils/validation";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from "../redux/userSlice";
+import { useNavigate } from "react-router-dom";
 
 
 const Login = () => {
@@ -11,6 +12,7 @@ const Login = () => {
   const[error,setError]=useState(null);
 
   const dispatch=useDispatch();
+  const navigate=useNavigate();
 
   const handleLoginClick=async()=>{
     
@@ -32,6 +34,7 @@ const Login = () => {
 
       })
      dispatch(addUser(response.data.data));
+     navigate("/");
     }
     catch(err){
       console.log(err.response.data.message);
