@@ -1,16 +1,15 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const { connectDB } = require("./config/database.js");
-const User = require("./models/user.js");
+const { connectDB } = require("./src/config/database.js");
+const User = require("./src/models/user.js");
 const cookieParser = require("cookie-parser");
 app.use(express.json()); // middleware to parse the data to json from client;
 app.use(cookieParser());
-const {authRouter}=require("./routers/auth.js");
-const {profileRouter}=require("./routers/profile.js");
-const {requestRouter}=require("./routers/requests.js");
-const {userRouter}=require("./routers/user.js");
-
+const {authRouter}=require("./src/routers/auth.js");
+const {profileRouter}=require("./src/routers/profile.js");
+const {requestRouter}=require("./src/routers/requests.js");
+const {userRouter}=require("./src/routers/user.js");
 
 
 
@@ -21,7 +20,6 @@ app.use("/",profileRouter);
 app.use("/",requestRouter);
 
 app.use("/",userRouter);
-
 
 
 
