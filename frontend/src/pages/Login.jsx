@@ -1,20 +1,39 @@
 import React, { useState } from "react";
 import { validateLoginData } from "../utils/validation";
+import axios from "axios";
 
 const Login = () => {
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const[error,setError]=useState(null);
 
-  const handleLoginClick=()=>{
+  const handleLoginClick=async()=>{
     
     const message=validateLoginData(emailId,password);
+    setError(message);
+       
+    if(message==null){
+        
+      const url= `${import.meta.env.VITE_BACKEND_URL}/login`;
+      try{
+      const response=await axios({
+        method:"post",
+        url:url,
+        data:{
+          emailId:emailId,
+          password:password
+        }
 
-   setError(message);
-
-   
-
-    console.log(message);
+      })
+      
+     console.log(response);
+    }
+    catch(err){
+      console.log(err.response.data.message);
+      setEmailId("");
+      setPassword("");
+    }
+    }
 
     
   }

@@ -6,11 +6,14 @@ const User = require("./src/models/user.js");
 const cookieParser = require("cookie-parser");
 app.use(express.json()); // middleware to parse the data to json from client;
 app.use(cookieParser());
+const cors=require("cors");
 const {authRouter}=require("./src/routers/auth.js");
 const {profileRouter}=require("./src/routers/profile.js");
 const {requestRouter}=require("./src/routers/requests.js");
 const {userRouter}=require("./src/routers/user.js");
 
+
+app.use(cors());
 
 
 app.use("/",authRouter);

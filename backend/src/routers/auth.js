@@ -34,7 +34,7 @@ authRouter.post("/signup", async (req, res) => {
   } catch (err) {
     res.status(400).json({
       result: "error",
-      message: `ERROR : ${err}`,
+      message: `${err}`,
     });
   }
 });
@@ -69,7 +69,7 @@ authRouter.post("/login", async (req, res) => {
   } catch (err) {
     res.status(400).json({
       result: "error",
-      message: `ERROR : ${err}`,
+      message: `${err}`,
     });
   }
 });
