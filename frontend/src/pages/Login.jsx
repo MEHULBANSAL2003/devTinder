@@ -1,12 +1,22 @@
 import React, { useState } from "react";
+import { validateLoginData } from "../utils/validation";
 
 const Login = () => {
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
+  const[error,setError]=useState(null);
 
   const handleLoginClick=()=>{
-    console.log(emailId);
-    console.log(password);
+    
+    const message=validateLoginData(emailId,password);
+
+   setError(message);
+
+   
+
+    console.log(message);
+
+    
   }
 
   return (
@@ -29,6 +39,7 @@ const Login = () => {
                 value={emailId}
                 onChange={(e) => setEmailId(e.target.value)}
               />
+              <div className="text-red-600 mt-1">{error&& error.startsWith("Email")&& (<p>{error}</p>)}</div>
             </label>
 
             <label className="form-control w-full max-w-xs">
@@ -42,6 +53,7 @@ const Login = () => {
                 value={password}
                 onChange={(e)=>setPassword(e.target.value)}
               />
+               <div className="text-red-600 mt-1">{error&& error.startsWith("Password")&& (<p>{error}</p>)}</div>
             </label>
           </div>
           <div className="card-actions justify-center mt-10">
