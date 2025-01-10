@@ -1,6 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { validateSignUpData } from "../utils/validation";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addUser } from "../redux/userSlice";
 
 const Signup = () => {
   const [firstName, setFirstName] = useState("");
@@ -9,10 +13,44 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
-  const handleSignup = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleSignup = async () => {
     const message = validateSignUpData(firstName, lastName, emailId, password);
 
     setError(message);
+
+    if (message === null) {
+      const url = `${import.meta.env.VITE_BACKEND_URL}/signup`;
+
+      try {
+        const response = await axios({
+          method: "post",
+          url: url,
+          data: {
+            firstName: firstName,
+            lastName: lastName,
+            emailId: emailId,
+            password: password,
+          },
+          withCredentials: true,
+        });
+
+        if (response.data.result == "success") {
+          toast.success(response.data.message);
+          dispatch(addUser(response.data.data));
+
+          navigate("/feed");
+        }
+      } catch (err) {
+        toast.error(err.response.data.message);
+        setFirstName("");
+        setLastName("");
+        setEmailId("");
+        setPassword("");
+      }
+    }
   };
 
   return (

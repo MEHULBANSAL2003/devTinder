@@ -12,6 +12,7 @@ const Body = () => {
   const userData = useSelector((store) => store.user);
 
   const fetchUser = async () => {
+    console.log("hello"); 
     const url = `${import.meta.env.VITE_BACKEND_URL}/profile/view`;
 
     try {
