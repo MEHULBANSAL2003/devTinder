@@ -3,14 +3,13 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../redux/userSlice";
 
 const Body = () => {
-
-   const dispatch=useDispatch();
-   const navigate=useNavigate();
-   
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const userData = useSelector((store) => store.user);
 
   const fetchUser = async () => {
     const url = `${import.meta.env.VITE_BACKEND_URL}/profile/view`;
@@ -22,18 +21,17 @@ const Body = () => {
         withCredentials: true,
       });
       dispatch(addUser(response.data.data));
-
     } catch (err) {
-      if(err.status===401){
-      navigate("/login");
-
+      if (err.status === 401) {
+        navigate("/login");
       }
-      
     }
   };
 
   useEffect(() => {
-    fetchUser();
+    if (!userData) {
+      fetchUser();
+    }
   }, []);
 
   return (

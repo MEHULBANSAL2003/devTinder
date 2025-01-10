@@ -3,7 +3,7 @@ import { validateLoginData } from "../utils/validation";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from "../redux/userSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Login = () => {
@@ -84,10 +84,15 @@ const Login = () => {
               </div>
             </label>
           </div>
-          <div className="card-actions justify-center mt-10">
+          <div className="card-actions justify-center mt-6">
             <button className="btn btn-primary" onClick={handleLoginClick}>
               Login
             </button>
+            <Link to="/signup">
+              <div className="font-semibold mt-4 cursor-pointer text-slate-200 hover:text-slate-300">
+                Don't have an account? Signup now
+              </div>
+            </Link>
           </div>
         </div>
       </div>
