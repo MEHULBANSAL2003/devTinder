@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from "../redux/userSlice";
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
 const Signup = () => {
   const [firstName, setFirstName] = useState("");
@@ -12,6 +13,7 @@ const Signup = () => {
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -51,6 +53,14 @@ const Signup = () => {
         setPassword("");
       }
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    if (password.current) {
+      password.current.type =
+        password.current.type === "password" ? "text" : "password";
+    }
+    setShowPassword((prev) => !prev);
   };
 
   return (
@@ -121,12 +131,12 @@ const Signup = () => {
               </div>
             </label>
 
-            <label className="form-control w-full max-w-xs">
+            <label className="form-control w-full max-w-xs relative">
               <div className="label">
                 <span className="label-text">Password</span>
               </div>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="enter your password"
                 className="input input-bordered w-full max-w-xs"
                 value={password}
@@ -135,6 +145,13 @@ const Signup = () => {
                   setPassword(e.target.value);
                 }}
               />
+              <button
+                onClick={togglePasswordVisibility}
+                className="absolute top-[65%] right-3 transform -translate-y-1/2 bg-transparent text-white hover:text-slate-100"
+                type="button"
+              >
+                {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
+              </button>
 
               <div className="text-red-600 mt-1 text-md">
                 {error && error.startsWith("Password") && <p>{error}</p>}

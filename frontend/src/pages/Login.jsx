@@ -5,11 +5,13 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../redux/userSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
 const Login = () => {
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -42,6 +44,13 @@ const Login = () => {
       }
     }
   };
+  const togglePasswordVisibility = () => {
+    if (password.current) {
+      password.current.type =
+        password.current.type === "password" ? "text" : "password";
+    }
+    setShowPassword((prev) => !prev);
+  };
 
   return (
     <div className="flex justify-center my-8">
@@ -71,12 +80,12 @@ const Login = () => {
               </div>
             </label>
 
-            <label className="form-control w-full max-w-xs">
+            <label className="form-control w-full max-w-xs relative">
               <div className="label">
                 <span className="label-text">Password</span>
               </div>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="enter your password"
                 className="input input-bordered w-full max-w-xs"
                 value={password}
@@ -85,6 +94,13 @@ const Login = () => {
                   setPassword(e.target.value);
                 }}
               />
+              <button
+                onClick={togglePasswordVisibility}
+                className="absolute top-[65%] right-3 transform -translate-y-1/2 bg-transparent text-white hover:text-slate-100"
+                type="button"
+              >
+                {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
+              </button>
               <div className="text-red-600 mt-1">
                 {error && error.startsWith("Password") && <p>{error}</p>}
               </div>
