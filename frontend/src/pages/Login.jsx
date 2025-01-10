@@ -4,47 +4,44 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
-  const[error,setError]=useState(null);
+  const [error, setError] = useState(null);
 
-  const dispatch=useDispatch();
-  const navigate=useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleLoginClick=async()=>{
-    
-    const message=validateLoginData(emailId,password);
+  const handleLoginClick = async () => {
+    const message = validateLoginData(emailId, password);
     setError(message);
-       
-    if(message==null){
-        
-      const url= `${import.meta.env.VITE_BACKEND_URL}/login`;
-      try{
-      const response=await axios({
-        method:"post",
-        url:url,
-        data:{
-          emailId:emailId,
-          password:password
-        },
-        withCredentials:true 
 
-      })
-     dispatch(addUser(response.data.data));
-     navigate("/");
+    if (message == null) {
+      const url = `${import.meta.env.VITE_BACKEND_URL}/login`;
+      try {
+        const response = await axios({
+          method: "post",
+          url: url,
+          data: {
+            emailId: emailId,
+            password: password,
+          },
+          withCredentials: true,
+        });
+        if (response.data.result == "success") {
+          toast.success(response.data.message);
+          dispatch(addUser(response.data.data));
+          navigate("/feed");
+        }
+      } catch (err) {
+        toast.error(err.response.data.message);
+        setEmailId("");
+        setPassword("");
+      }
     }
-    catch(err){
-      console.log(err.response.data.message);
-      setEmailId("");
-      setPassword("");
-    }
-    }
-
-    
-  }
+  };
 
   return (
     <div className="flex justify-center my-8">
@@ -66,7 +63,9 @@ const Login = () => {
                 value={emailId}
                 onChange={(e) => setEmailId(e.target.value)}
               />
-              <div className="text-red-600 mt-1">{error&& error.startsWith("Email")&& (<p>{error}</p>)}</div>
+              <div className="text-red-600 mt-1">
+                {error && error.startsWith("Email") && <p>{error}</p>}
+              </div>
             </label>
 
             <label className="form-control w-full max-w-xs">
@@ -78,13 +77,17 @@ const Login = () => {
                 placeholder="enter your password"
                 className="input input-bordered w-full max-w-xs"
                 value={password}
-                onChange={(e)=>setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
-               <div className="text-red-600 mt-1">{error&& error.startsWith("Password")&& (<p>{error}</p>)}</div>
+              <div className="text-red-600 mt-1">
+                {error && error.startsWith("Password") && <p>{error}</p>}
+              </div>
             </label>
           </div>
           <div className="card-actions justify-center mt-10">
-            <button className="btn btn-primary" onClick={handleLoginClick}>Login</button>
+            <button className="btn btn-primary" onClick={handleLoginClick}>
+              Login
+            </button>
           </div>
         </div>
       </div>
