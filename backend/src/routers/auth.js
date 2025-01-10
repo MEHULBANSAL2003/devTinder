@@ -2,7 +2,10 @@ const express = require("express");
 const authRouter = express.Router();
 const bcrypt = require("bcrypt");
 const User = require("../models/user.js");
-const {validateSignUpData,validateLoginData} = require("../utils/validation.js");
+const {
+  validateSignUpData,
+  validateLoginData,
+} = require("../utils/validation.js");
 
 authRouter.post("/signup", async (req, res) => {
   // validating the data
@@ -62,7 +65,7 @@ authRouter.post("/login", async (req, res) => {
       res.json({
         result: "success",
         message: "logged in successfully",
-        data:user
+        data: user,
       });
     } else {
       throw new Error("password is incorrect");
@@ -76,12 +79,19 @@ authRouter.post("/login", async (req, res) => {
 });
 
 authRouter.post("/logout", async (req, res) => {
-  res.cookie("token", null, { expires: new Date(Date.now()) });
+  try {
+    res.cookie("token", null, { expires: new Date(Date.now()) });
 
-  res.json({
-    result: "success",
-    message: "logged out sucessfully",
-  });
+    res.json({
+      result: "success",
+      message: "logged out sucessfully",
+    });
+  } catch (err) {
+    res.status(400).json({
+      result: "error",
+      message: `${err}`,
+    });
+  }
 });
 
 module.exports = { authRouter };
