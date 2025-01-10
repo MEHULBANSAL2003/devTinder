@@ -61,7 +61,10 @@ const Login = () => {
                 placeholder="enter your email"
                 className="input input-bordered w-full max-w-xs"
                 value={emailId}
-                onChange={(e) => setEmailId(e.target.value)}
+                onChange={(e) => {
+                  setError(null);
+                  setEmailId(e.target.value);
+                }}
               />
               <div className="text-red-600 mt-1">
                 {error && error.startsWith("Email") && <p>{error}</p>}
@@ -77,7 +80,10 @@ const Login = () => {
                 placeholder="enter your password"
                 className="input input-bordered w-full max-w-xs"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setError(null);
+                  setPassword(e.target.value);
+                }}
               />
               <div className="text-red-600 mt-1">
                 {error && error.startsWith("Password") && <p>{error}</p>}
@@ -88,11 +94,14 @@ const Login = () => {
             <button className="btn btn-primary" onClick={handleLoginClick}>
               Login
             </button>
-            <Link to="/signup">
-              <div className="font-semibold mt-4 cursor-pointer text-slate-200 hover:text-slate-300">
-                Don't have an account? Signup now
-              </div>
-            </Link>
+          </div>
+          <div className="font-semibold mt-4 flex justify-center">
+            <p className="mx-8">
+              Don't have an account?
+              <Link to="/signup" className="text-slate-200 mx-2">
+                Signup
+              </Link>
+            </p>
           </div>
         </div>
       </div>
