@@ -12,12 +12,13 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
 
     res.json({
       result: "success",
-      message: user,
+      message:"user fetched successfully",
+       data: user,
     });
   } catch (err) {
     res.status(400).json({
       result: "error",
-      message: `ERROR : ${err}`,
+      message: ` ${err}`,
     });
   }
 });
@@ -35,13 +36,14 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     await currUser.save();
 
     res.json({
+      result:"success",
       message: `${currUser.firstName}, your profile has been updated successfully`,
       data: currUser,
     });
   } catch (err) {
     res.status(400).json({
       result: "error",
-      message: `ERROR : ${err}`,
+      message: `${err}`,
     });
   }
 });
@@ -59,12 +61,13 @@ profileRouter.patch("/profile/password", userAuth, async (req, res) => {
 
     res.json({
       result: "success",
-      message: currUser,
+      message:"password changed successfully",
+     data: currUser,
     });
   } catch (err) {
     res.status(400).json({
       result: "error",
-      message: `ERROR : ${err}`,
+      message: `${err}`,
     });
   }
 });

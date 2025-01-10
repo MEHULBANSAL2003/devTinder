@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from "../redux/userSlice";
@@ -9,6 +9,7 @@ import { addUser } from "../redux/userSlice";
 const Body = () => {
 
    const dispatch=useDispatch();
+   const navigate=useNavigate();
    
 
   const fetchUser = async () => {
@@ -23,7 +24,11 @@ const Body = () => {
       dispatch(addUser(response.data.data));
 
     } catch (err) {
-      console.log(err.response.data.message);
+      if(err.status===401){
+      navigate("/login");
+
+      }
+      
     }
   };
 
