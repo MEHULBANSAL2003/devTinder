@@ -1,45 +1,64 @@
-import Body from "./components/Body";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Login from "./pages/Login";
-import Feed from "./pages/Feed";
-import Home from "./pages/Home";
 import { useSelector } from "react-redux";
-import Profile from "./pages/Profile";
-import Signup from "./pages/Signup";
+import Loader from "./components/Loader";
+const Login = lazy(() => import("./pages/Login"));
+const Feed = lazy(() => import("./pages/Feed"));
+const Home = lazy(() => import("./pages/Home"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Body = lazy(() => import("./components/Body"));
+const Signup = lazy(() => import("./pages/Signup"));
 
 function App() {
   const userData = useSelector((store) => store.user);
+
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+
+   setIsLoading(false);
+  }, []);
+
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <>
-      <BrowserRouter basename="/">
-        <Routes>
-          <Route path="/" element={<Body />}>
+      <Suspense fallback={<Loader />}>
+        <BrowserRouter basename="/">
+          <Routes>
+            <Route path="/" element={<Body />}>
+              <Route
+                path="/"
+                element={!userData ? <Home /> : <Navigate to="/feed" />}
+              />
+              <Route
+                path="/login"
+                element={!userData ? <Login /> : <Navigate to="/feed" />}
+              />
+              <Route
+                path="/signup"
+                element={!userData ? <Signup /> : <Navigate to="/feed" />}
+              />
+              <Route
+                path="/feed"
+                element={userData ? <Feed /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/profile"
+                element={userData ? <Profile /> : <Navigate to="/login" />}
+              />
+            </Route>
             <Route
-              path="/"
-              element={!userData ? <Home /> : <Navigate to="/feed" />}
+              path="*"
+              element={<Navigate to={userData ? "/feed" : "/"} />}
             />
-            <Route
-              path="/login"
-              element={!userData ? <Login /> : <Navigate to="/feed" />}
-            />
-            <Route
-              path="/signup"
-              element={!userData ? <Signup /> : <Navigate to="/feed" />}
-            />
-            <Route
-              path="/feed"
-              element={userData ? <Feed /> : <Navigate to="/login" />}
-            />
-            <Route
-              path="/profile"
-              element={userData ? <Profile /> : <Navigate to="/login" />}
-            />
-          </Route>
-        </Routes>
-        <ToastContainer />
-      </BrowserRouter>
+          </Routes>
+          <ToastContainer />
+        </BrowserRouter>
+      </Suspense>
     </>
   );
 }
