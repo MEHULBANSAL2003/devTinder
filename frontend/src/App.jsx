@@ -35,18 +35,21 @@ function App() {
       dispatch(addUser(response.data.data));
       sessionStorage.setItem("user", JSON.stringify(response.data.data));
       setIsUserFetched(true);
-      setIsLoading(false); 
+      setIsLoading(false);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-       
         console.log("Token not found or expired:", err.response.data);
-        navigate("/login"); 
+        navigate("/login");
       } else {
         console.error("Error fetching user data:", err);
       }
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
+
+
+
+  // Call this function wherever you handle logout in your app
 
   useEffect(() => {
     const storedUser = sessionStorage.getItem("user");
@@ -88,11 +91,9 @@ function App() {
               path="/profile"
               element={userData ? <Profile /> : <Navigate to="/login" />}
             />
-            <Route
-              path="/profile/edit"
-              element={userData ? <EditProfile /> : <Navigate to="/login" />}
-            />
+           
           </Route>
+         
 
           <Route
             path="*"
