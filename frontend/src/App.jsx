@@ -22,7 +22,6 @@ function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Fetch user data from backend
   const fetchUser = async () => {
     const url = `${import.meta.env.VITE_BACKEND_URL}/profile/view`;
 
@@ -30,16 +29,22 @@ function App() {
       const response = await axios({
         method: "get",
         url: url,
-        withCredentials: true,
+        withCredentials: true, // Ensure cookies are sent
       });
 
       dispatch(addUser(response.data.data));
       sessionStorage.setItem("user", JSON.stringify(response.data.data));
       setIsUserFetched(true);
+      setIsLoading(false); 
     } catch (err) {
-      if (err.status === 401) {
-        navigate("/login");
+      if (err.response && err.response.status === 401) {
+       
+        console.log("Token not found or expired:", err.response.data);
+        navigate("/login"); 
+      } else {
+        console.error("Error fetching user data:", err);
       }
+      setIsLoading(false); 
     }
   };
 
@@ -48,14 +53,13 @@ function App() {
     if (storedUser) {
       dispatch(addUser(JSON.parse(storedUser)));
       setIsUserFetched(true);
+      setIsLoading(false); // Stop loading if user data is already stored
     } else {
-      fetchUser();
+      fetchUser(); // Fetch user if not found in sessionStorage
     }
-
-    setIsLoading(false);
   }, []);
 
-  if (isLoading || !isUserFetched) {
+  if (isLoading) {
     return <Loader />;
   }
 

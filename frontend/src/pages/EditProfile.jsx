@@ -36,7 +36,7 @@ const EditProfile = () => {
     );
     setError(message);
 
-    const skill = formData.skills.join(","); // Convert the array to a string
+    const skill = formData.skills;
 
     const skillsArray = skill
       .split(",")
