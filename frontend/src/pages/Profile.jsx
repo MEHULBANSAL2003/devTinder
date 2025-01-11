@@ -4,17 +4,18 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const user = useSelector((store) => store.user);
-  const navigate=useNavigate();
-  
-  const handleEditProfile=()=>{
-      navigate("/profile/edit");
-  }
+  const navigate = useNavigate();
 
-  console.log(user);
+  const handleEditProfile = () => {
+    navigate("/profile/edit");
+  };
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-100 to-indigo-200">
       <div className="max-w-4xl w-full bg-white rounded-lg shadow-xl p-8 relative">
-        <button onClick={handleEditProfile} className="absolute top-4 right-4 px-4 py-2 bg-blue-600 text-white font-semibold text-sm rounded hover:bg-blue-700 transition">
+        <button
+          onClick={handleEditProfile}
+          className="absolute top-4 right-4 px-4 py-2 bg-blue-600 text-white font-semibold text-sm rounded hover:bg-blue-700 transition"
+        >
           Edit Profile
         </button>
         <div className="flex flex-col md:flex-row items-center gap-8">

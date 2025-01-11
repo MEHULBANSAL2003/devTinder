@@ -17,7 +17,7 @@ const EditProfile = () => {
     age: user.age,
     about: user?.about,
     gender: user?.gender,
-    skills: "",
+    skills: user?.skills,
   });
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -35,7 +35,8 @@ const EditProfile = () => {
       formData.about
     );
     setError(message);
-    const skill = formData.skills;
+
+    const skill = formData.skills.join(","); // Convert the array to a string
 
     const skillsArray = skill
       .split(",")
