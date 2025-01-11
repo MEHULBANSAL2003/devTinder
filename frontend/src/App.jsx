@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "./components/Loader";
 import { addUser } from "./redux/userSlice";
 import axios from "axios";
-
 const Login = lazy(() => import("./pages/Login"));
 const Feed = lazy(() => import("./pages/Feed"));
 const Home = lazy(() => import("./pages/Home"));
@@ -29,7 +28,7 @@ function App() {
       const response = await axios({
         method: "get",
         url: url,
-        withCredentials: true, // Ensure cookies are sent
+        withCredentials: true,
       });
 
       dispatch(addUser(response.data.data));
@@ -47,18 +46,14 @@ function App() {
     }
   };
 
-
-
-  // Call this function wherever you handle logout in your app
-
   useEffect(() => {
     const storedUser = sessionStorage.getItem("user");
     if (storedUser) {
       dispatch(addUser(JSON.parse(storedUser)));
       setIsUserFetched(true);
-      setIsLoading(false); // Stop loading if user data is already stored
+      setIsLoading(false);
     } else {
-      fetchUser(); // Fetch user if not found in sessionStorage
+      fetchUser();
     }
   }, []);
 
@@ -91,9 +86,12 @@ function App() {
               path="/profile"
               element={userData ? <Profile /> : <Navigate to="/login" />}
             />
-           
+
+            <Route
+              path="/profile/edit"
+              element={userData ? <EditProfile /> : <Navigate to="/login" />}
+            />
           </Route>
-         
 
           <Route
             path="*"
