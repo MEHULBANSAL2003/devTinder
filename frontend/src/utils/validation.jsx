@@ -43,3 +43,17 @@ export const validateSignUpData = (firstName, lastName, email, password) => {
 
   return null;
 };
+
+export const validateProfileEditData=(firstName,lastName,age,about)=>{
+
+  if(firstName==="") return "First name is required";
+  if(lastName==="") return "Last name is required";
+  if(age==null) return "Age is required";
+  if(age<=18) return "Age must be greater than or equal to 19";
+  if(about=="") return "Please describe about yourself";
+
+  return null;
+
+
+
+}

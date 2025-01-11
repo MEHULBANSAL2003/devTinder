@@ -10,6 +10,7 @@ const Profile = () => {
       navigate("/profile/edit");
   }
 
+  console.log(user);
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-100 to-indigo-200">
       <div className="max-w-4xl w-full bg-white rounded-lg shadow-xl p-8 relative">
