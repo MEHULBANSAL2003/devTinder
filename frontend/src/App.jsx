@@ -10,6 +10,7 @@ const Home = lazy(() => import("./pages/Home"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Body = lazy(() => import("./components/Body"));
 const Signup = lazy(() => import("./pages/Signup"));
+const EditProfile=lazy(()=>import("./pages/EditProfile"));
 
 function App() {
   const userData = useSelector((store) => store.user);
@@ -50,7 +51,12 @@ function App() {
                 path="/profile"
                 element={userData ? <Profile /> : <Navigate to="/login" />}
               />
+              <Route
+                path="/profile/edit"
+                element={userData ? <EditProfile /> : <Navigate to="/login" />}
+              />
             </Route>
+            
             <Route
               path="*"
               element={<Navigate to={userData ? "/feed" : "/"} />}

@@ -11,8 +11,7 @@ const Body = () => {
   const navigate = useNavigate();
   const userData = useSelector((store) => store.user);
 
-  const fetchUser = async () => {
-    console.log("hello"); 
+  const fetchUser = async () => { 
     const url = `${import.meta.env.VITE_BACKEND_URL}/profile/view`;
 
     try {
