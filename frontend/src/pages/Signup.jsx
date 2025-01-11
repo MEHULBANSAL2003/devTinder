@@ -12,6 +12,8 @@ const Signup = () => {
   const [lastName, setLastName] = useState("");
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
+  const [age,setAge]=useState(null);
+  const [gender,setGender]=useState("");
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -19,7 +21,7 @@ const Signup = () => {
   const dispatch = useDispatch();
 
   const handleSignup = async () => {
-    const message = validateSignUpData(firstName, lastName, emailId, password);
+    const message = validateSignUpData(firstName, lastName, emailId, password,age,gender);
 
     setError(message);
 
@@ -33,8 +35,11 @@ const Signup = () => {
           data: {
             firstName: firstName,
             lastName: lastName,
+            age:age,
+            gender:gender,
             emailId: emailId,
             password: password,
+
           },
           withCredentials: true,
         });
@@ -51,6 +56,8 @@ const Signup = () => {
         setLastName("");
         setEmailId("");
         setPassword("");
+        setAge("");
+
       }
     }
   };
@@ -112,6 +119,52 @@ const Signup = () => {
                 {error && error.startsWith("Last") && <p>{error}</p>}
               </div>
             </label>
+
+          
+            <label className="form-control w-full max-w-xs mb-5">
+              <div className="label">
+                <span className="label-text">Age</span>
+              </div>
+              <input
+                type="number"
+                name="age"
+                placeholder="Enter your age"
+                className="input input-bordered w-full max-w-xs"
+                value={age}
+                onChange={(e)=>{
+                  setError(null);
+                  setAge(e.target.value);
+                }}
+              />
+              <div className="text-red-600 mt-1">
+                {error && error.startsWith("Age") && <p>{error}</p>}
+              </div>
+            </label>
+
+            <label className="form-control w-full max-w-xs mb-5">
+              <div className="label">
+                <span className="label-text">Gender</span>
+              </div>
+              <select
+                name="gender"
+                className="select select-bordered w-full max-w-xs"
+                value={gender}
+                onChange={(e)=>{
+                     setError(null);
+                     setGender(e.target.value);
+                }}
+              >
+                <option value="">Select your gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+              <div className="text-red-600 mt-1">
+                {error && error.startsWith("Gender") && <p>{error}</p>}
+              </div>
+            </label>
+
+
             <label className="form-control w-full max-w-xs mb-5">
               <div className="label">
                 <span className="label-text">Email</span>

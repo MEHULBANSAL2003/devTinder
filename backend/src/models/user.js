@@ -39,10 +39,12 @@ const userSchema = new Schema(
     },
     age: {
       type: Number,
+      required:true,
       min: 18,
     },
     gender: {
       type: String,
+      required:true,
       // validate method will be called only when the new document is created
       // on updating existing document it does not check for the validations
       validate(value) {
