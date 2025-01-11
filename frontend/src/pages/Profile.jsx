@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const user = useSelector((store) => store.user);
@@ -9,6 +9,7 @@ const Profile = () => {
   const handleEditProfile = () => {
     navigate("/profile/edit");
   };
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-100 to-indigo-200">
       <div className="max-w-4xl w-full bg-white rounded-lg shadow-xl p-8 relative">
@@ -30,6 +31,17 @@ const Profile = () => {
             </h1>
             <p className="text-gray-500 text-lg">{user.emailId}</p>
             <p className="mt-4 text-gray-700">{user.about}</p>
+
+            <div className="mt-4 flex gap-6 text-lg text-gray-600">
+              <div>
+                <p className="font-semibold">Age</p>
+                <p>{user.age || "Not available"}</p>
+              </div>
+              <div>
+                <p className="font-semibold">Gender</p>
+                <p>{user.gender || "Not available"}</p>
+              </div>
+            </div>
           </div>
         </div>
         <div className="mt-8">
