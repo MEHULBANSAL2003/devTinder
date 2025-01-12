@@ -98,7 +98,7 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
     let data = await User.find({
       _id: { $nin: notRequiredIds },
     })
-      .select("-password -email -createdAt -updatedAt -__v -_id")
+      .select("-password -email -createdAt -updatedAt -__v")
       .skip(skip)
       .limit(limit);
 
