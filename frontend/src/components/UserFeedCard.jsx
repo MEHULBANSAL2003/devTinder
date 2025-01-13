@@ -3,22 +3,18 @@ import React from "react";
 const UserFeedCard = ({ user }) => {
   return (
     <div className="max-w-sm w-full mx-auto bg-slate-800 my-3 border-gray-200 rounded-lg shadow-md p-5 flex flex-col items-center">
-      {/* User Image */}
       <img
         src={user.photoUrl}
         alt={`${user.firstName} ${user.lastName}`}
         className="w-24 h-24 rounded-full object-cover border-2 border-indigo-500"
       />
 
-      {/* User Name */}
       <h2 className="mt-4 text-xl font-semibold text-gray-100">
         {`${user.firstName} ${user.lastName}`}
       </h2>
 
-      {/* User About */}
       <p className="mt-2 text-gray-400 text-center">{user.about}</p>
 
-      {/* Skills */}
       <div className="flex flex-wrap justify-center gap-2 mt-4">
         {user.skills.length > 0 ? (
           user.skills.map((skill, index) => (
@@ -34,7 +30,6 @@ const UserFeedCard = ({ user }) => {
         )}
       </div>
 
-      {/* Action Buttons */}
       <div className="flex gap-4 mt-5">
         <button
           onClick={() => console.log("Send Request clicked!")}
