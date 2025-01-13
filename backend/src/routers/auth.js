@@ -69,7 +69,7 @@ authRouter.post("/login", async (req, res) => {
 
       // add token to cookie and send it back to the user
       res.cookie("token", token, {
-        expires: new Date(Date.now() + 1 * 3600000),
+        expires: new Date(Date.now() + 24 * 3600000),
       });
       res.json({
         result: "success",
