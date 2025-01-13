@@ -1,6 +1,12 @@
+import axios from "axios";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const UserCard = ({ user }) => {
+  const navigate = useNavigate();
+  const handleViewProfile = () => {
+    navigate(`/profile/${user._id}`);
+  };
   return (
     <div className="bg-base-300 rounded-lg shadow-lg p-6 flex flex-col items-center text-center text-white space-y-4">
       <img
@@ -13,7 +19,10 @@ const UserCard = ({ user }) => {
       </h2>
       <p className="text-sm text-gray-200">{user.email}</p>
       <div className=" flex ">
-        <button className="bg-blue-500 hover:bg-blue-600 text-sm px-6 py-2 rounded-lg shadow-md">
+        <button
+          onClick={handleViewProfile}
+          className="bg-blue-500 hover:bg-blue-600 text-sm px-6 py-2 rounded-lg shadow-md"
+        >
           View Profile
         </button>
         <button className="bg-red-500 hover:bg-red-600 text-sm px-6 py-2 rounded-lg shadow-md mx-4">

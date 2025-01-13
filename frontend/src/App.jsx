@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "./components/Loader";
 import { addUser } from "./redux/userSlice";
 import axios from "axios";
+import ViewProfile from "./pages/ViewProfile";
 const Login = lazy(() => import("./pages/Login"));
 const Feed = lazy(() => import("./pages/Feed"));
 const Home = lazy(() => import("./pages/Home"));
@@ -95,6 +96,10 @@ function App() {
             <Route
               path="/connections"
               element={userData ? <Connections /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/profile/:id"
+              element={userData ? <ViewProfile /> : <Navigate to="/login" />}
             />
           </Route>
 
