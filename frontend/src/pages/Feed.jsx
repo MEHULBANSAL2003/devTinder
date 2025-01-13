@@ -9,7 +9,6 @@ const Feed = () => {
 
   const fetchUserFeedData = async () => {
     const url = `${import.meta.env.VITE_BACKEND_URL}/user/feed`;
-
     try {
       const response = await axios({
         method: "get",
@@ -31,20 +30,30 @@ const Feed = () => {
 
   useEffect(() => {
     fetchUserFeedData();
-    setLoading(false);
   }, []);
+
+  const handleActionComplete = (userId) => {
+    setUserData((prevUserData) =>
+      prevUserData.filter((user) => user._id !== userId)
+    );
+  };
 
   if (loading || !userData) return <Loader />;
 
+  if (userData.length === 0) {
+    return (
+      <div className="text-2xl font-semibold mt-40 mx-[44%]">No more users</div>
+    );
+  }
+
   return (
-    <div className="flex justify-center items-center min-h-screen ">
+    <div className="flex justify-center items-center min-h-screen">
       <div className="flex overflow-x-scroll snap-x snap-mandatory w-full max-w-3xl space-x-4 p-4">
-        {userData &&
-          userData.map((user) => (
-            <div key={user._id} className="snap-center shrink-0 w-full">
-              <UserFeedCard user={user} />
-            </div>
-          ))}
+        {userData.map((user) => (
+          <div key={user._id} className="snap-center shrink-0 w-full">
+            <UserFeedCard user={user} onActionComplete={handleActionComplete} />
+          </div>
+        ))}
       </div>
     </div>
   );

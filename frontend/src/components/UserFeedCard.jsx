@@ -1,6 +1,50 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-const UserFeedCard = ({ user }) => {
+const UserFeedCard = ({ user, onActionComplete }) => {
+  const [reqBtn, setReqBtn] = useState("Send Request");
+
+
+  const handleSendRequest = async () => {
+    const url = `${import.meta.env.VITE_BACKEND_URL}/request/send/interested/${user._id}`;
+
+    try {
+      const response = await axios({
+        method: "post",
+        url: url,
+        withCredentials: true,
+      });
+
+      if (response.data.result === "success") {
+        toast.success(response.data.message);
+        setReqBtn("Cancel Request");
+        
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "An error occurred");
+    }
+  };
+
+  const handleIgnore = async () => {
+    const url = `${import.meta.env.VITE_BACKEND_URL}/request/send/ignored/${user._id}`;
+
+    try {
+      const response = await axios({
+        method: "post",
+        url: url,
+        withCredentials: true,
+      });
+
+      if (response.data.result === "success") {
+        toast.success(response.data.message);
+        onActionComplete(user._id); 
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "An error occurred");
+    }
+  };
+
   return (
     <div className="max-w-sm w-full mx-auto bg-slate-800 my-3 border-gray-200 rounded-lg shadow-md p-5 flex flex-col items-center">
       <img
@@ -32,17 +76,19 @@ const UserFeedCard = ({ user }) => {
 
       <div className="flex gap-4 mt-5">
         <button
-          onClick={() => console.log("Send Request clicked!")}
+          onClick={handleSendRequest}
           className="px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition"
         >
-          Send Request
+          {reqBtn}
         </button>
-        <button
-          onClick={() => console.log("Ignore clicked!")}
-          className="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition"
-        >
-          Ignore
-        </button>
+        {reqBtn === "Send Request" && (
+          <button
+            onClick={handleIgnore}
+            className="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition"
+          >
+           Ignore
+          </button>
+        )}
       </div>
     </div>
   );
