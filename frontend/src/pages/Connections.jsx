@@ -2,10 +2,18 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Loader from "../components/Loader";
 import UserCard from "../components/UserCard";
+import { useNavigate } from "react-router-dom";
 
 const Connections = () => {
   const [connection, setConnection] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate=useNavigate();
+
+  const handleMakeConnection=()=>{
+
+    navigate("/feed");
+
+  }
 
   const getAllConnections = async () => {
     const url = `${import.meta.env.VITE_BACKEND_URL}/user/connection`;
@@ -42,7 +50,7 @@ const Connections = () => {
       {connection && connection.length === 0 ? (
         <div className="flex flex-col items-center text-white">
           <p className="text-lg mb-4">No connections found...!!</p>
-          <button className="bg-green-500 hover:bg-green-600 px-6 py-3 rounded-lg text-white text-lg font-semibold shadow-lg">
+          <button onClick={handleMakeConnection} className="bg-green-500 hover:bg-green-600 px-6 py-3 rounded-lg text-white text-lg font-semibold shadow-lg">
             Let's Make Connections
           </button>
         </div>

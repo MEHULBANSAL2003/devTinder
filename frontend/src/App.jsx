@@ -13,7 +13,7 @@ const Profile = lazy(() => import("./pages/Profile"));
 const Body = lazy(() => import("./components/Body"));
 const Signup = lazy(() => import("./pages/Signup"));
 const EditProfile = lazy(() => import("./pages/EditProfile"));
-const Connections=lazy(()=> import("./pages/Connections"));
+const Connections = lazy(() => import("./pages/Connections"));
 
 function App() {
   const userData = useSelector((store) => store.user);
@@ -92,7 +92,7 @@ function App() {
               path="/profile/edit"
               element={userData ? <EditProfile /> : <Navigate to="/login" />}
             />
-             <Route
+            <Route
               path="/connections"
               element={userData ? <Connections /> : <Navigate to="/login" />}
             />
