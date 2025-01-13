@@ -16,6 +16,10 @@ const userSchema = new Schema(
     lastName: {
       type: String,
     },
+    userName: {
+      type: String,
+      required: true,
+    },
     emailId: {
       type: String,
       lowercase: true,
@@ -39,12 +43,12 @@ const userSchema = new Schema(
     },
     age: {
       type: Number,
-      required:true,
+      required: true,
       min: 18,
     },
     gender: {
       type: String,
-      required:true,
+      required: true,
       // validate method will be called only when the new document is created
       // on updating existing document it does not check for the validations
       validate(value) {

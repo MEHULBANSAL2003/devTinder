@@ -3,7 +3,8 @@ const ConnectionRequestModel = require("../models/connectionRequests");
 const User = require("../models/user");
 
 const validateSignUpData = (req) => {
-  const { firstName, lastName,gender,age, emailId, password } = req.body;
+  const { firstName, lastName, userName, gender, age, emailId, password } =
+    req.body;
 
   if (!firstName || !lastName) {
     throw new Error("Name is not valid!");
@@ -12,13 +13,16 @@ const validateSignUpData = (req) => {
   if (firstName.length < 4 || firstName.length > 50) {
     throw new Error("First Name should contain 4-50 characters");
   }
-  if(age==="") throw new Error("Age is required");
-  if(gender==="") throw new Error("Please enter your gender");
-  if(age<18){
-    throw new Error("You must be miminum 18 years old");
+  if (userName === "") return "UserName is required";
+  if (userName.length < 4 || userName.length > 50) {
+    throw new Error("username should contain 4-50 characters");
   }
 
-  
+  if (age === "") throw new Error("Age is required");
+  if (gender === "") throw new Error("Please enter your gender");
+  if (age < 18) {
+    throw new Error("You must be miminum 18 years old");
+  }
 
   if (!validator.isEmail(emailId)) {
     throw new Error("enter the valid email address");
@@ -118,7 +122,6 @@ const validateRequestReviewData = async (req) => {
     throw new Error("invalid request id");
   }
 
-  
   const toUserId = request.toUserId;
 
   if (!currUser.equals(toUserId)) {
@@ -131,13 +134,8 @@ const validateRequestReviewData = async (req) => {
     throw new Error(`invalid status type : ${status}`);
   }
 
-  
-
- 
-
-
   if (request.status !== "interested") {
-    throw new Error("not allowed to change the status");  
+    throw new Error("not allowed to change the status");
   }
 
   req.request = request;

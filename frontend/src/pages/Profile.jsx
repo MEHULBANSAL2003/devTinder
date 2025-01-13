@@ -29,7 +29,7 @@ const Profile = () => {
             <h1 className="text-3xl font-bold text-gray-800">
               {user.firstName} {user.lastName}
             </h1>
-            <p className="text-gray-500 text-lg">{user.emailId}</p>
+            <p className="text-gray-500 text-lg">{user.userName}</p>
             <p className="mt-4 text-gray-700">{user.about}</p>
 
             <div className="mt-4 flex gap-6 text-lg text-gray-600">

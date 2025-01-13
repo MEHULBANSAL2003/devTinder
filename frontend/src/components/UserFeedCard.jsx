@@ -63,9 +63,7 @@ const UserFeedCard = ({ user, onActionComplete }) => {
         toast.success(response.data.message);
         window.location.reload();
       }
-    } catch (err) {
-      
-    }
+    } catch (err) {}
   };
 
   return (
@@ -79,6 +77,7 @@ const UserFeedCard = ({ user, onActionComplete }) => {
       <h2 className="mt-4 text-xl font-semibold text-gray-100">
         {`${user.firstName} ${user.lastName}`}
       </h2>
+      <h2>{user.userName}</h2>
 
       <p className="mt-2 text-gray-400 text-center">{user.about}</p>
 

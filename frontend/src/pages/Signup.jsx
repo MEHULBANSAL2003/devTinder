@@ -12,8 +12,9 @@ const Signup = () => {
   const [lastName, setLastName] = useState("");
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
-  const [age,setAge]=useState(null);
-  const [gender,setGender]=useState("");
+  const [age, setAge] = useState(null);
+  const [gender, setGender] = useState("");
+  const [username, setUsername] = useState("");
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -21,7 +22,15 @@ const Signup = () => {
   const dispatch = useDispatch();
 
   const handleSignup = async () => {
-    const message = validateSignUpData(firstName, lastName, emailId, password,age,gender);
+    const message = validateSignUpData(
+      firstName,
+      lastName,
+      username,
+      emailId,
+      password,
+      age,
+      gender
+    );
 
     setError(message);
 
@@ -35,11 +44,11 @@ const Signup = () => {
           data: {
             firstName: firstName,
             lastName: lastName,
-            age:age,
-            gender:gender,
+            userName: username,
+            age: age,
+            gender: gender,
             emailId: emailId,
             password: password,
-
           },
           withCredentials: true,
         });
@@ -57,7 +66,7 @@ const Signup = () => {
         setEmailId("");
         setPassword("");
         setAge("");
-
+        setUsername("");
       }
     }
   };
@@ -120,7 +129,25 @@ const Signup = () => {
               </div>
             </label>
 
-          
+            <label className="form-control w-full max-w-xs mb-5">
+              <div className="label">
+                <span className="label-text">Username</span>
+              </div>
+              <input
+                type="text"
+                placeholder="enter your username name"
+                className="input input-bordered w-full max-w-xs"
+                value={username}
+                onChange={(e) => {
+                  setError(null);
+                  setUsername(e.target.value);
+                }}
+              />
+              <div className="text-red-600 mt-1 text-md">
+                {error && error.startsWith("User") && <p>{error}</p>}
+              </div>
+            </label>
+
             <label className="form-control w-full max-w-xs mb-5">
               <div className="label">
                 <span className="label-text">Age</span>
@@ -131,7 +158,7 @@ const Signup = () => {
                 placeholder="Enter your age"
                 className="input input-bordered w-full max-w-xs"
                 value={age}
-                onChange={(e)=>{
+                onChange={(e) => {
                   setError(null);
                   setAge(e.target.value);
                 }}
@@ -149,9 +176,9 @@ const Signup = () => {
                 name="gender"
                 className="select select-bordered w-full max-w-xs"
                 value={gender}
-                onChange={(e)=>{
-                     setError(null);
-                     setGender(e.target.value);
+                onChange={(e) => {
+                  setError(null);
+                  setGender(e.target.value);
                 }}
               >
                 <option value="">Select your gender</option>
@@ -163,7 +190,6 @@ const Signup = () => {
                 {error && error.startsWith("Gender") && <p>{error}</p>}
               </div>
             </label>
-
 
             <label className="form-control w-full max-w-xs mb-5">
               <div className="label">

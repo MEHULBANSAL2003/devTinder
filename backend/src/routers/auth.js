@@ -11,7 +11,8 @@ authRouter.post("/signup", async (req, res) => {
   // validating the data
   try {
     validateSignUpData(req);
-    const { firstName, lastName,gender,age, emailId, password } = req.body;
+    const { firstName, lastName, userName, gender, age, emailId, password } =
+      req.body;
 
     const registeredUser = await User.find({ emailId: emailId });
     if (registeredUser.length > 0) {
@@ -25,6 +26,7 @@ authRouter.post("/signup", async (req, res) => {
     const user = new User({
       firstName,
       lastName,
+      userName,
       gender,
       age,
       emailId,

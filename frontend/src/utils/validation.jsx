@@ -17,13 +17,21 @@ export const validateLoginData = (email, password) => {
   return null;
 };
 
-export const validateSignUpData = (firstName, lastName, email, password,age,gender) => {
+export const validateSignUpData = (
+  firstName,
+  lastName,
+  username,
+  email,
+  password,
+  age,
+  gender
+) => {
   if (firstName === "") return "First Name is required";
   if (lastName === "") return "Last Name is required";
-  if(age===null) return "Age is required";
-  if(age<18) return "Age must be 18 or more";
-  if(gender==="") return "Gender is required";
-
+  if (username === "") return "Username is required";
+  if (age === null) return "Age is required";
+  if (age < 18) return "Age must be 18 or more";
+  if (gender === "") return "Gender is required";
 
   if (email === "") return "Email is required";
   if (password === "") return "Password is required";
@@ -48,16 +56,12 @@ export const validateSignUpData = (firstName, lastName, email, password,age,gend
   return null;
 };
 
-export const validateProfileEditData=(firstName,lastName,age,about)=>{
-
-  if(firstName==="") return "First name is required";
-  if(lastName==="") return "Last name is required";
-  if(age==null) return "Age is required";
-  if(age<18) return "Age must be greater than or equal to 18 ";
-  if(about==="") return "Please describe about yourself";
+export const validateProfileEditData = (firstName, lastName, age, about) => {
+  if (firstName === "") return "First name is required";
+  if (lastName === "") return "Last name is required";
+  if (age == null) return "Age is required";
+  if (age < 18) return "Age must be greater than or equal to 18 ";
+  if (about === "") return "Please describe about yourself";
 
   return null;
-
-
-
-}
+};
