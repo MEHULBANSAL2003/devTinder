@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import UserFeedCard from "../components/UserFeedCard";
 import axios from "axios";
+import Loader from "../components/Loader";
 
 const Feed = () => {
   const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const fetchUserFeedData = async () => {
     const url = `${import.meta.env.VITE_BACKEND_URL}/user/feed`;
@@ -17,17 +19,22 @@ const Feed = () => {
 
       if (response.data.result === "success") {
         setUserData(response.data.data);
+        setLoading(false);
       }
 
       console.log(response.data.data);
     } catch (err) {
       console.error("Error fetching user data:", err);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchUserFeedData();
+    setLoading(false);
   }, []);
+
+  if (loading || !userData) return <Loader />;
 
   return (
     <div className="flex justify-center items-center min-h-screen ">
