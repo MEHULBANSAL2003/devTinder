@@ -20,8 +20,6 @@ const Feed = () => {
         setUserData(response.data.data);
         setLoading(false);
       }
-
-      console.log(response.data.data);
     } catch (err) {
       console.error("Error fetching user data:", err);
       setLoading(false);

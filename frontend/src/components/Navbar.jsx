@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { removeUser } from "../redux/userSlice";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { IoIosNotifications } from "react-icons/io";
 
 const Navbar = () => {
   const user = useSelector((store) => store.user);
@@ -39,6 +40,7 @@ const Navbar = () => {
       </div>
       {user && (
         <div className="flex-none gap-2">
+         <Link to="/requests"> <div className="mx-5 cursor-pointer"> <IoIosNotifications size={30}/></div> </Link>
           <div className="form-control">Welcome, {user.firstName}</div>
           <div className="dropdown dropdown-end mx-3">
             <div
