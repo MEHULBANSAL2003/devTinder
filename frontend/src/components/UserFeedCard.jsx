@@ -5,9 +5,10 @@ import { toast } from "react-toastify";
 const UserFeedCard = ({ user, onActionComplete }) => {
   const [reqBtn, setReqBtn] = useState("Send Request");
 
-
   const handleSendRequest = async () => {
-    const url = `${import.meta.env.VITE_BACKEND_URL}/request/send/interested/${user._id}`;
+    const url = `${import.meta.env.VITE_BACKEND_URL}/request/send/interested/${
+      user._id
+    }`;
 
     try {
       const response = await axios({
@@ -19,7 +20,6 @@ const UserFeedCard = ({ user, onActionComplete }) => {
       if (response.data.result === "success") {
         toast.success(response.data.message);
         setReqBtn("Cancel Request");
-        
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "An error occurred");
@@ -27,7 +27,9 @@ const UserFeedCard = ({ user, onActionComplete }) => {
   };
 
   const handleIgnore = async () => {
-    const url = `${import.meta.env.VITE_BACKEND_URL}/request/send/ignored/${user._id}`;
+    const url = `${import.meta.env.VITE_BACKEND_URL}/request/send/ignored/${
+      user._id
+    }`;
 
     try {
       const response = await axios({
@@ -38,10 +40,31 @@ const UserFeedCard = ({ user, onActionComplete }) => {
 
       if (response.data.result === "success") {
         toast.success(response.data.message);
-        onActionComplete(user._id); 
+        onActionComplete(user._id);
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "An error occurred");
+    }
+  };
+
+  const handleCancelRequest = async () => {
+    const url = `${import.meta.env.VITE_BACKEND_URL}/request/cancel/${
+      user._id
+    }`;
+
+    try {
+      const response = await axios({
+        method: "post",
+        url: url,
+        withCredentials: true,
+      });
+
+      if (response.data.result == "success") {
+        toast.success(response.data.message);
+        window.location.reload();
+      }
+    } catch (err) {
+      
     }
   };
 
@@ -73,23 +96,35 @@ const UserFeedCard = ({ user, onActionComplete }) => {
           <span className="text-gray-500 text-sm"></span>
         )}
       </div>
-
-      <div className="flex gap-4 mt-5">
-        <button
-          onClick={handleSendRequest}
-          className="px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition"
-        >
-          {reqBtn}
-        </button>
-        {reqBtn === "Send Request" && (
+      {reqBtn === "Send Request" && (
+        <div className="flex gap-4 mt-5">
           <button
-            onClick={handleIgnore}
+            onClick={handleSendRequest}
+            className="px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition"
+          >
+            {reqBtn}
+          </button>
+          {reqBtn === "Send Request" && (
+            <button
+              onClick={handleIgnore}
+              className="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition"
+            >
+              Ignore
+            </button>
+          )}
+        </div>
+      )}
+
+      {reqBtn === "Cancel Request" && (
+        <div className="flex gap-4 mt-5">
+          <button
+            onClick={handleCancelRequest}
             className="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition"
           >
-           Ignore
+            {reqBtn}
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

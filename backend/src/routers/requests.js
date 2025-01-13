@@ -5,6 +5,7 @@ const {
   validateSendConnectionRequestData,
   validateRequestReviewData,
 } = require("../utils/validation");
+const User = require("../models/user");
 
 const requestRouter = express.Router();
 
@@ -68,4 +69,30 @@ requestRouter.post(
     }
   }
 );
+
+requestRouter.post("/request/cancel/:userId", userAuth, async (req, res) => {
+  const toUserId = req.params.userId;
+  const currUser = req.user._id;
+
+  const user = await User.findById(toUserId);
+
+  if (!user) throw new Error("user doesn't exists!!");
+
+  try {
+    const data = await ConnectionRequestModel.findOneAndDelete({
+      fromUserId: currUser,
+      toUserId: toUserId,
+    });
+
+    res.status(200).json({
+      result: "success",
+      message: "request cancelled successfully",
+    });
+  } catch (err) {
+    res.status(400).json({
+      result: "error",
+      message: `ERROR : ${err.message}`,
+    });
+  }
+});
 module.exports = { requestRouter };
