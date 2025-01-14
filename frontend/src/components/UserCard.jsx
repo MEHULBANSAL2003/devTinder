@@ -5,19 +5,19 @@ const UserCard = ({ user }) => {
   const navigate = useNavigate();
   console.log(user);
   const handleViewProfile = () => {
-    navigate(`/profile/${user._id}`);
+    navigate(`/profile/${user?.user?._id}`);
   };
   return (
     <div className="bg-base-300 rounded-lg shadow-lg p-6 flex flex-col items-center text-center text-white space-y-4">
       <img
-        src={user.photoUrl}
+        src={user?.user?.photoUrl}
         alt="user photo"
         className="w-24 h-24 rounded-full object-cover border-4 border-white"
       />
       <h2 className="text-2xl font-bold">
-        {user.firstName} {user.lastName}
+        {user?.user?.firstName} {user?.user?.lastName}
       </h2>
-      <p className="text-sm text-gray-200">{user.email}</p>
+      <p className="text-sm text-gray-200">{user?.user?.email}</p>
       <div className=" flex ">
         <button
           onClick={handleViewProfile}

@@ -81,18 +81,20 @@ profileRouter.get("/profile/view/:userId", userAuth, async (req, res) => {
     const user = await User.findById(req.params.userId).select(
       "-password -emailId"
     );
+ 
    
     if (!user) throw new Error("invalid request..!!");
-
+     
     res.status(200).json({
       result: "success",
       message: "profile fetched successfully",
       data: user,
     });
   } catch (err) {
-    res.status(400).json({
+    
+    res.status(404).json({
       result: "error",
-      message: ` ${err}`,
+      message: ` ${err.message}`,
     });
   }
 });

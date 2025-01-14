@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loader from "../components/Loader";
+import { toast } from "react-toastify";
 
 const ViewProfile = () => {
   const { id } = useParams();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleViewProfile = async () => {
     const url = `${import.meta.env.VITE_BACKEND_URL}/profile/view/${id}`;
@@ -19,17 +22,44 @@ const ViewProfile = () => {
 
       if (response.data.result === "success") {
         setProfile(response.data.data);
-        setLoading(false);
+        setError(null);
+      } else {
+        setError("User not found.");
       }
-    } catch (err) {}
+    } catch (err) {
+      if (err.response && err.response.status === 404) {
+        setError("User not found.");
+      } else {
+        setError("An error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     handleViewProfile();
   }, []);
 
-  if (loading || !profile) {
+  if (loading) {
     return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen ">
+        <div className="max-w-2xl w-full bg-white rounded-lg shadow-xl p-8 text-center">
+          <h1 className="text-3xl font-bold text-red-600">Error</h1>
+          <p className="mt-4 text-gray-700">{error}</p>
+          <button
+            onClick={() => navigate("/")}
+            className="mt-6 bg-indigo-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-indigo-600"
+          >
+            Go Back to Home
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -71,7 +101,7 @@ const ViewProfile = () => {
               ))}
             </ul>
           ) : (
-            <p className="text-gray-500 mt-4"></p>
+            <p className="text-gray-500 mt-4">No skills listed.</p>
           )}
         </div>
         <div className="mt-8 text-gray-500 text-sm">

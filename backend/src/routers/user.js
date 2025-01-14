@@ -42,12 +42,19 @@ userRouter.get("/user/connection", userAuth, async (req, res) => {
       .populate("toUserId", "firstName lastName photoUrl")
       .populate("fromUserId", "firstName lastName photoUrl");
 
+    
+
     const data = connections.map((row) => {
       if (row.fromUserId._id.equals(currUser._id)) {
-        return row.toUserId;
+        return {
+          _id:row._id,
+          user:row.toUserId
+        };
       }
 
-      return row.fromUserId;
+      return {
+        _id:row._id,
+        user:row.fromUserId};
     });
 
     res.json({
