@@ -40,10 +40,9 @@ function App() {
       setIsLoading(false);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        console.log("Token not found or expired:", err.response.data);
         navigate("/login");
       } else {
-        console.error("Error fetching user data:", err);
+      
       }
       setIsLoading(false);
     }

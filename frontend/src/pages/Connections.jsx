@@ -27,7 +27,7 @@ const Connections = () => {
         setConnection(response.data.data);
       }
     } catch (err) {
-      console.error(err);
+      
     }
   };
 

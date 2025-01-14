@@ -21,7 +21,7 @@ const Feed = () => {
         setLoading(false);
       }
     } catch (err) {
-      console.error("Error fetching user data:", err);
+      
       setLoading(false);
     }
   };

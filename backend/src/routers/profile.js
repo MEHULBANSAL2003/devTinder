@@ -81,7 +81,7 @@ profileRouter.get("/profile/view/:userId", userAuth, async (req, res) => {
     const user = await User.findById(req.params.userId).select(
       "-password -emailId"
     );
-    console.log(user);
+   
     if (!user) throw new Error("invalid request..!!");
 
     res.status(200).json({

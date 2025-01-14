@@ -15,7 +15,7 @@ userRouter.get("/user/requests/recieved", userAuth, async (req, res) => {
       status: "interested",
     }).populate("fromUserId", ["firstName", "lastName","photoUrl"]);
 
-    console.log(requests);
+    
 
     res.json({
       result: "success",
@@ -82,7 +82,6 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
       $or: [{ toUserId: currUser._id }, { fromUserId: currUser._id }],
     });
 
-    // console.log(connections);
     let notRequiredIds = [];
     notRequiredIds.push(currUser._id);
 
