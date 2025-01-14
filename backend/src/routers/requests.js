@@ -49,7 +49,6 @@ requestRouter.post(
     try {
       await validateRequestReviewData(req);
 
-      //const request=await ConnectionRequestModel.findByIdAndUpdate(req.params.requestId,{status:req.params.status});
       const request = req.request;
 
       request.status = req.params.status;

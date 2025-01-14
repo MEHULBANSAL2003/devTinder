@@ -11,6 +11,30 @@ const RequestCard = ({ user,onActionComplete }) => {
 
 const handleAccept=async ()=>{
 
+  const reqId=user._id;
+  const url= `${import.meta.env.VITE_BACKEND_URL}/request/review/accepted/${reqId}`;
+
+  try{
+    const response=await axios({
+     method:"post",
+     url:url,
+     withCredentials:true
+    });
+
+    if(response.data.result==="success"){
+       toast.success(response.data.message);
+       onActionComplete(user._id);
+    }
+ }
+ catch(err){  
+
+   toast.error(err?.response?.data?.message);
+
+  
+
+ }
+
+
 };
 
 const handleReject=async()=>{

@@ -13,9 +13,7 @@ userRouter.get("/user/requests/recieved", userAuth, async (req, res) => {
     const requests = await ConnectionRequestModel.find({
       toUserId: currUser._id,
       status: "interested",
-    }).populate("fromUserId", ["firstName", "lastName","photoUrl"]);
-
-    
+    }).populate("fromUserId", ["firstName", "lastName", "photoUrl"]);
 
     res.json({
       result: "success",
@@ -42,7 +40,7 @@ userRouter.get("/user/connection", userAuth, async (req, res) => {
       ],
     })
       .populate("toUserId", "firstName lastName photoUrl")
-      .populate("fromUserId", "firstName lastName photUrl");
+      .populate("fromUserId", "firstName lastName photoUrl");
 
     const data = connections.map((row) => {
       if (row.fromUserId._id.equals(currUser._id)) {
