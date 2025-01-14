@@ -16,6 +16,7 @@ const Signup = lazy(() => import("./pages/Signup"));
 const EditProfile = lazy(() => import("./pages/EditProfile"));
 const Connections = lazy(() => import("./pages/Connections"));
 const Requests=lazy(()=>import("./pages/Requests"));
+const Error=lazy(()=>import("./components/Error"));
 
 function App() {
   const userData = useSelector((store) => store.user);
@@ -109,7 +110,7 @@ function App() {
 
           <Route
             path="*"
-            element={<Navigate to={userData ? "/feed" : "/"} />}
+            element={<Error/>}
           />
         </Routes>
         <ToastContainer />
