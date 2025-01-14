@@ -15,8 +15,8 @@ const Body = lazy(() => import("./components/Body"));
 const Signup = lazy(() => import("./pages/Signup"));
 const EditProfile = lazy(() => import("./pages/EditProfile"));
 const Connections = lazy(() => import("./pages/Connections"));
-const Requests=lazy(()=>import("./pages/Requests"));
-const Error=lazy(()=>import("./components/Error"));
+const Requests = lazy(() => import("./pages/Requests"));
+const Error = lazy(() => import("./components/Error"));
 
 function App() {
   const userData = useSelector((store) => store.user);
@@ -43,7 +43,6 @@ function App() {
       if (err.response && err.response.status === 401) {
         navigate("/login");
       } else {
-      
       }
       setIsLoading(false);
     }
@@ -108,10 +107,7 @@ function App() {
             />
           </Route>
 
-          <Route
-            path="*"
-            element={<Error/>}
-          />
+          <Route path="*" element={<Error />} />
         </Routes>
         <ToastContainer />
       </Suspense>

@@ -21,7 +21,6 @@ const Feed = () => {
         setLoading(false);
       }
     } catch (err) {
-      
       setLoading(false);
     }
   };

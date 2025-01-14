@@ -40,7 +40,13 @@ const Navbar = () => {
       </div>
       {user && (
         <div className="flex-none gap-2">
-         <Link to="/requests"> <div className="mx-5 cursor-pointer"> <IoIosNotifications size={30}/></div> </Link>
+          <Link to="/requests">
+            {" "}
+            <div className="mx-5 cursor-pointer">
+              {" "}
+              <IoIosNotifications size={30} />
+            </div>{" "}
+          </Link>
           <div className="form-control">Welcome, {user.firstName}</div>
           <div className="dropdown dropdown-end mx-3">
             <div

@@ -25,7 +25,6 @@ const Connections = () => {
       if (response.data.result === "success") {
         setLoading(false);
         setConnection(response.data.data);
-
       }
     } catch (err) {}
   };
