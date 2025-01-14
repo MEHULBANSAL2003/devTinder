@@ -57,7 +57,7 @@ requestRouter.post(
       const data = await request.save();
 
       res.json({
-        result: "sucess",
+        result: "success",
         message: `connection request ${req.params.status}`,
         data: data,
       });

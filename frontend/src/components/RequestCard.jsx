@@ -1,11 +1,46 @@
 import React from "react";
 import { formatDistanceToNow } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-const RequestCard = ({ user }) => {
+const RequestCard = ({ user,onActionComplete }) => {
   const { fromUserId, createdAt } = user;
 
   const navigate = useNavigate();
+
+const handleAccept=async ()=>{
+
+};
+
+const handleReject=async()=>{
+
+  const reqId=user._id;
+  const url= `${import.meta.env.VITE_BACKEND_URL}/request/review/rejected/${reqId}`;
+
+  try{
+     const response=await axios({
+      method:"post",
+      url:url,
+      withCredentials:true
+     });
+
+     if(response.data.result==="success"){
+        toast.success(response.data.message);
+        onActionComplete(user._id);
+     }
+  }
+  catch(err){  
+
+    toast.error(err?.response?.data?.message);
+
+   
+
+  }
+};
+
+
+
   const handleViewProfile = async () => {
     navigate(`/profile/${fromUserId._id}`);
   };
@@ -38,10 +73,10 @@ const RequestCard = ({ user }) => {
         </button>
       </div>
       <div className="mt-7 mx-20  flex">
-        <button className="px-4 py-2 mx-3 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition">
+        <button onClick={handleAccept} className="px-4 py-2 mx-3 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition">
           Accept
         </button>
-        <button className="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition">
+        <button onClick={handleReject} className="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition">
           Reject
         </button>
       </div>
