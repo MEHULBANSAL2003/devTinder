@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const UserCard = ({ user }) => {
+const ConnectionCard = ({ user }) => {
   const navigate = useNavigate();
   console.log(user);
   const handleViewProfile = () => {
@@ -33,4 +33,4 @@ const UserCard = ({ user }) => {
   );
 };
 
-export default UserCard;
+export default ConnectionCard;

@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Loader from "../components/Loader";
-import UserCard from "../components/UserCard";
 import { useNavigate } from "react-router-dom";
+import ConnectionCard from "../components/ConnectionCard";
 
 const Connections = () => {
   const [connection, setConnection] = useState(null);
@@ -58,7 +58,7 @@ const Connections = () => {
       ) : (
         <div className="flex flex-col space-y-6 w-full max-w-3xl">
           {connection?.map((user) => (
-            <UserCard key={user._id} user={user} />
+            <ConnectionCard key={user._id} user={user} />
           ))}
         </div>
       )}
