@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Loader from "../components/Loader";
 import { useNavigate } from "react-router-dom";
 import ConnectionCard from "../components/ConnectionCard";
@@ -10,30 +10,33 @@ const Connections = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
+  const debounceTimeout = useRef(null); // Reference for debounce timeout
 
   const handleMakeConnection = () => {
     navigate("/feed");
   };
+
+  // Debounced search handler
   const handleKeyUpSearch = async () => {
-    setLoading(true);
-    const url = `${
-      import.meta.env.VITE_BACKEND_URL
-    }/user/search?search=${encodeURIComponent(searchText)}`;
+    clearTimeout(debounceTimeout.current); // Clear previous timeout
 
-    try {
-      const response = await axios({
-        method: "get",
-        url: url,
-        withCredentials: true,
-      });
+    debounceTimeout.current = setTimeout(async () => {
+      const url = `${
+        import.meta.env.VITE_BACKEND_URL
+      }/user/search?search=${encodeURIComponent(searchText)}`;
 
-      if (response.data.result === "success") {
-        setFilteredConnection(response.data.data);
-        setLoading(false);
-      }
-    } catch (err) {
-      setLoading(false);
-    }
+      try {
+        const response = await axios({
+          method: "get",
+          url: url,
+          withCredentials: true,
+        });
+
+        if (response.data.result === "success") {
+          setFilteredConnection(response.data.data);
+        }
+      } catch (err) {}
+    }, 500); // Set delay for debouncing (500ms)
   };
 
   const handleSearch = async () => {
@@ -112,8 +115,10 @@ const Connections = () => {
               placeholder="Search connections by name or username"
               className="w-96 px-4 py-2 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 mr-4"
               value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              onKeyUp={handleKeyUpSearch}
+              onChange={(e) => {
+                setSearchText(e.target.value);
+              }}
+              onKeyUp={handleKeyUpSearch} // Call debounced search on keyup
             />
             <button
               onClick={handleSearch}
@@ -123,7 +128,7 @@ const Connections = () => {
             </button>
           </div>
           {filteredConnection.length === 0 && (
-            <h1 className="text-white text-2xl font-bold mt-60 mx-48">
+            <h1 className="text-white text-2xl font-bold text-center mt-20 sm:mt-40 mx-4 sm:mx-16">
               No such connection found..!!
             </h1>
           )}
