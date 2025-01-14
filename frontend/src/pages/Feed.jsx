@@ -45,7 +45,7 @@ const Feed = () => {
   }
 
   return (
-    <div className="flex justify-center items-center mt-28">
+    <div className="flex justify-center items-center mt-16">
       <div className="flex overflow-x-scroll  snap-x snap-mandatory w-full max-w-3xl space-x-4 p-4">
         {userData.map((user) => (
           <div key={user._id} className="snap-center shrink-0 w-full">
