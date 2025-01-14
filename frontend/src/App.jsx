@@ -40,10 +40,7 @@ function App() {
       setIsUserFetched(true);
       setIsLoading(false);
     } catch (err) {
-      if (err.response && err.response.status === 401) {
-        navigate("/login");
-      } else {
-      }
+        
       setIsLoading(false);
     }
   };

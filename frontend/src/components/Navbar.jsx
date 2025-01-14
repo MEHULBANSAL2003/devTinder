@@ -1,14 +1,20 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { removeUser } from "../redux/userSlice";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { IoIosNotifications } from "react-icons/io";
+import { IoLogIn } from "react-icons/io5";
 
 const Navbar = () => {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
+  const navigate=useNavigate();
+
+  const handleLogin=()=>{
+    navigate("/login");
+  }
 
   const handleLogout = async () => {
     const url = `${import.meta.env.VITE_BACKEND_URL}/logout`;
@@ -38,6 +44,12 @@ const Navbar = () => {
           DevTinder
         </Link>
       </div>
+      {!user && 
+      <button onClick={handleLogin} className="mx-4">
+         <IoLogIn  size={40}/>
+      </button>
+       
+      }
       {user && (
         <div className="flex-none gap-2">
           <Link to="/requests">
@@ -78,6 +90,7 @@ const Navbar = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };
