@@ -9,8 +9,7 @@ const User = require("../models/user");
 
 const requestRouter = express.Router();
 
-requestRouter.post(
-  "/request/send/:status/:toUserId",
+requestRouter.post("/request/send/:status/:toUserId",
   userAuth,
   async (req, res) => {
     try {
@@ -42,8 +41,7 @@ requestRouter.post(
   }
 );
 
-requestRouter.post(
-  "/request/review/:status/:requestId",
+requestRouter.post("/request/review/:status/:requestId",
   userAuth,
   async (req, res) => {
     try {
@@ -63,13 +61,14 @@ requestRouter.post(
     } catch (err) {
       res.status(400).json({
         result: "error",
-        message: `ERROR : ${err.message}`,
+        message: `ERROR : ${err}`,
       });
     }
   }
 );
 
-requestRouter.post("/request/cancel/:userId", userAuth, async (req, res) => {
+requestRouter.post("/request/cancel/:userId", 
+userAuth, async (req, res) => {
   const toUserId = req.params.userId;
   const currUser = req.user._id;
 
@@ -94,4 +93,28 @@ requestRouter.post("/request/cancel/:userId", userAuth, async (req, res) => {
     });
   }
 });
+
+requestRouter.post("/request/remove/:reqId",
+ userAuth, async (req, res) => {
+  const reqId = req.params.reqId;
+
+  try {
+    const request = await ConnectionRequestModel.findByIdAndDelete(reqId);
+
+    if (!request) {
+      throw new Error("Invalid request. No matching connection found.");
+    }
+
+    res.status(200).json({
+      result: "success",
+      message: "Connection removed successfully",
+    });
+  } catch (err) {
+    res.status(400).json({
+      result: "error",
+      message: `ERROR: ${err.message}`,
+    });
+  }
+});
+
 module.exports = { requestRouter };

@@ -25,17 +25,21 @@ const Connections = () => {
       if (response.data.result === "success") {
         setLoading(false);
         setConnection(response.data.data);
-        console.log(response.data.data);
+
       }
-    } catch (err) {
-      
-    }
+    } catch (err) {}
   };
 
   useEffect(() => {
     getAllConnections();
     setLoading(false);
   }, []);
+
+  const handleActionComplete = (userId) => {
+    setConnection((prevUserData) =>
+      prevUserData.filter((user) => user._id !== userId)
+    );
+  };
 
   if (loading || !connection) {
     return <Loader />;
@@ -58,7 +62,11 @@ const Connections = () => {
       ) : (
         <div className="flex flex-col space-y-6 w-full max-w-3xl">
           {connection?.map((user) => (
-            <ConnectionCard key={user._id} user={user} />
+            <ConnectionCard
+              key={user._id}
+              user={user}
+              onActionComplete={handleActionComplete}
+            />
           ))}
         </div>
       )}
