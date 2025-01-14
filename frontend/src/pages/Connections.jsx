@@ -6,11 +6,56 @@ import ConnectionCard from "../components/ConnectionCard";
 
 const Connections = () => {
   const [connection, setConnection] = useState(null);
+  const [filteredConnection, setFilteredConnection] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [searchText, setSearchText] = useState("");
 
   const handleMakeConnection = () => {
     navigate("/feed");
+  };
+  const handleKeyUpSearch = async () => {
+    setLoading(true);
+    const url = `${
+      import.meta.env.VITE_BACKEND_URL
+    }/user/search?search=${encodeURIComponent(searchText)}`;
+
+    try {
+      const response = await axios({
+        method: "get",
+        url: url,
+        withCredentials: true,
+      });
+
+      if (response.data.result === "success") {
+        setFilteredConnection(response.data.data);
+        setLoading(false);
+      }
+    } catch (err) {
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = async () => {
+    setLoading(true);
+    const url = `${
+      import.meta.env.VITE_BACKEND_URL
+    }/user/search?search=${encodeURIComponent(searchText)}`;
+
+    try {
+      const response = await axios({
+        method: "get",
+        url: url,
+        withCredentials: true,
+      });
+
+      if (response.data.result === "success") {
+        setFilteredConnection(response.data.data);
+        setLoading(false);
+      }
+    } catch (err) {
+      setLoading(false);
+    }
   };
 
   const getAllConnections = async () => {
@@ -25,6 +70,7 @@ const Connections = () => {
       if (response.data.result === "success") {
         setLoading(false);
         setConnection(response.data.data);
+        setFilteredConnection(response.data.data);
       }
     } catch (err) {}
   };
@@ -35,7 +81,7 @@ const Connections = () => {
   }, []);
 
   const handleActionComplete = (userId) => {
-    setConnection((prevUserData) =>
+    setFilteredConnection((prevUserData) =>
       prevUserData.filter((user) => user._id !== userId)
     );
   };
@@ -60,7 +106,29 @@ const Connections = () => {
         </div>
       ) : (
         <div className="flex flex-col space-y-6 w-full max-w-3xl">
-          {connection?.map((user) => (
+          <div className="flex justify-center items-center mb-8">
+            <input
+              type="text"
+              placeholder="Search connections by name or username"
+              className="w-96 px-4 py-2 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 mr-4"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              onKeyUp={handleKeyUpSearch}
+            />
+            <button
+              onClick={handleSearch}
+              className="px-6 py-2 bg-base-300 hover:bg-base-100 text-white rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-gray-200"
+            >
+              Search
+            </button>
+          </div>
+          {filteredConnection.length === 0 && (
+            <h1 className="text-white text-2xl font-bold mt-60 mx-48">
+              No such connection found..!!
+            </h1>
+          )}
+
+          {filteredConnection?.map((user) => (
             <ConnectionCard
               key={user._id}
               user={user}

@@ -39,16 +39,17 @@ const ConnectionCard = ({ user, onActionComplete }) => {
   };
 
   return (
-    <div className="bg-base-300 rounded-lg shadow-lg p-6 flex flex-col items-center text-center text-white space-y-4 relative">
+    <div className="bg-base-300 rounded-lg shadow-lg p-6 flex flex-col items-center text-center text-white  relative">
       <img
         src={user?.user?.photoUrl}
         alt="user photo"
         className="w-24 h-24 rounded-full object-cover border-4 border-white"
       />
-      <h2 className="text-2xl font-bold">
+      <h2 className="text-2xl font-bold text-white">
         {user?.user?.firstName} {user?.user?.lastName}
       </h2>
-      <p className="text-sm text-gray-200">{user?.user?.email}</p>
+       
+      <p className="text-md font-semibold text-gray-200 mt-1 mb-4">{user?.user?.userName}</p>
       <div className="flex">
         <button
           onClick={handleViewProfile}

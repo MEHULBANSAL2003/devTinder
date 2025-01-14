@@ -18,7 +18,7 @@ userRouter.get("/user/requests/recieved", userAuth, async (req, res) => {
     res.json({
       result: "success",
       message: "requests fetched successfully",
-      data:requests,
+      data: requests,
     });
   } catch (err) {
     res.status(400).json({
@@ -39,22 +39,21 @@ userRouter.get("/user/connection", userAuth, async (req, res) => {
         { fromUserId: currUser._id, status: "accepted" },
       ],
     })
-      .populate("toUserId", "firstName lastName photoUrl")
-      .populate("fromUserId", "firstName lastName photoUrl");
-
-    
+      .populate("toUserId", "firstName lastName photoUrl userName")
+      .populate("fromUserId", "firstName lastName photoUrl userName");
 
     const data = connections.map((row) => {
       if (row.fromUserId._id.equals(currUser._id)) {
         return {
-          _id:row._id,
-          user:row.toUserId
+          _id: row._id,
+          user: row.toUserId,
         };
       }
 
       return {
-        _id:row._id,
-        user:row.fromUserId};
+        _id: row._id,
+        user: row.fromUserId,
+      };
     });
 
     res.json({
@@ -79,7 +78,7 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
     let page = parseInt(req.query.page) || 1;
     let limit = parseInt(req.query.limit) || 10;
 
-    limit=limit>50?50:limit;
+    limit = limit > 50 ? 50 : limit;
 
     let skip = (page - 1) * limit;
 
@@ -114,6 +113,66 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
     res.status(400).json({
       result: "error",
       message: `ERROR : ${err.message}`,
+    });
+  }
+});
+
+userRouter.get("/user/search", userAuth, async (req, res) => {
+  const searchKey = req.query.search;
+  const regex = new RegExp("^" + searchKey, "i");
+
+  const currUser = req.user;
+
+  try {
+    const connections = await ConnectionRequestModel.find({
+      $or: [
+        { toUserId: currUser._id, status: "accepted" },
+        { fromUserId: currUser._id, status: "accepted" },
+      ],
+    })
+      .populate("toUserId", "firstName lastName photoUrl userName")
+      .populate("fromUserId", "firstName lastName photoUrl userName");
+
+    const data = connections.map((row) => {
+      let matchedUser = null;
+
+      if (row.fromUserId._id.equals(currUser._id)) {
+        if (
+          regex.test(row.toUserId.firstName) ||
+          regex.test(row.toUserId.lastName) ||
+          regex.test(row.toUserId.userName)
+        ) {
+          matchedUser = {
+            _id: row._id,
+            user: row.toUserId,
+          };
+        }
+      } else {
+        if (
+          regex.test(row.fromUserId.firstName) ||
+          regex.test(row.fromUserId.lastName) ||
+          regex.test(row.fromUserId.userName)
+        ) {
+          matchedUser = {
+            _id: row._id,
+            user: row.fromUserId,
+          };
+        }
+      }
+
+      return matchedUser;
+    });
+
+    const filteredData = data.filter((user) => user !== null);
+
+    res.status(200).json({
+      result: "success",
+      data: filteredData,
+    });
+  } catch (err) {
+    res.status(500).json({
+      result: "error",
+      message: `Error: ${err.message}`,
     });
   }
 });
