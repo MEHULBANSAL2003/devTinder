@@ -9,11 +9,18 @@ const {
 const { putObjectInS3 } = require("../utils/s3.js");
 
 authRouter.post("/signup", async (req, res) => {
-  // validating the data
   try {
     validateSignUpData(req);
-    const { firstName, lastName, userName,imageUrl, gender, age, emailId, password } =
-      req.body;
+    const {
+      firstName,
+      lastName,
+      userName,
+      imageUrl,
+      gender,
+      age,
+      emailId,
+      password,
+    } = req.body;
 
     const registeredUser = await User.find({ emailId: emailId });
     if (registeredUser.length > 0) {
@@ -32,7 +39,7 @@ authRouter.post("/signup", async (req, res) => {
       age,
       emailId,
       password: hashedPassword,
-      photoUrl:imageUrl
+      photoUrl: imageUrl,
     });
     await user.save();
 
@@ -107,12 +114,13 @@ authRouter.post("/logout", async (req, res) => {
   }
 });
 
-authRouter.post("/generate-upload-url", async (req, res)=>{
-
+authRouter.post("/generate-upload-url", async (req, res) => {
   const { filename, contentType } = req.body;
 
   if (!filename || !contentType) {
-    return res.status(400).json({ result: "error", message: "Missing filename or content-type." });
+    return res
+      .status(400)
+      .json({ result: "error", message: "Missing filename or content-type." });
   }
 
   const response = await putObjectInS3(filename, contentType);
@@ -121,7 +129,6 @@ authRouter.post("/generate-upload-url", async (req, res)=>{
   } else {
     res.status(500).json(response);
   }
-
-})
+});
 
 module.exports = { authRouter };

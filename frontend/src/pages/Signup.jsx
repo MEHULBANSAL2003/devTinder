@@ -33,8 +33,6 @@ const Signup = () => {
     }
 
     setImage(file);
-
-    // Request a signed URL from the backend
     try {
       const filename = encodeURIComponent(file.name);
       const contentType = file.type;
@@ -48,7 +46,6 @@ const Signup = () => {
       );
 
       if (response.data.result === "success") {
-        // Upload the image directly to S3 using the signed URL
         const signedUrl = response.data.url;
 
         await axios.put(signedUrl, file, {
@@ -82,20 +79,25 @@ const Signup = () => {
     if (message === null) {
       const url = `${import.meta.env.VITE_BACKEND_URL}/signup`;
 
+      const data = {
+        firstName: firstName,
+        lastName: lastName,
+        userName: username,
+        age: age,
+        gender: gender,
+        emailId: emailId,
+        password: password,
+      };
+
+      if (imageUrl) {
+        data.imageUrl = imageUrl;
+      }
+
       try {
         const response = await axios({
           method: "post",
           url: url,
-          data: {
-            firstName: firstName,
-            lastName: lastName,
-            userName: username,
-            imageUrl:imageUrl,
-            age: age,
-            gender: gender,
-            emailId: emailId,
-            password: password,
-          },
+          data: data,
           withCredentials: true,
         });
 
