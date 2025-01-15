@@ -13,7 +13,6 @@ const EditProfile = () => {
   const [formData, setFormData] = useState({
     firstName: user.firstName,
     lastName: user.lastName,
-    photoUrl: user.photoUrl,
     age: user.age,
     about: user?.about,
     gender: user?.gender,
@@ -50,7 +49,6 @@ const EditProfile = () => {
         {
           firstName: formData.firstName,
           lastName: formData.lastName,
-          photoUrl: formData.photoUrl,
           age: formData.age,
           about: formData.about,
           gender: formData.gender,
@@ -79,7 +77,6 @@ const EditProfile = () => {
           </h2>
 
           <div>
-            {/* First Name */}
             <label className="form-control w-full max-w-xs mb-5">
               <div className="label">
                 <span className="label-text">First Name</span>
@@ -97,7 +94,6 @@ const EditProfile = () => {
               </div>
             </label>
 
-            {/* Last Name */}
             <label className="form-control w-full max-w-xs mb-5">
               <div className="label">
                 <span className="label-text">Last Name</span>
@@ -115,22 +111,6 @@ const EditProfile = () => {
               </div>
             </label>
 
-            {/* Photo URL */}
-            <label className="form-control w-full max-w-xs mb-5">
-              <div className="label">
-                <span className="label-text">Photo URL</span>
-              </div>
-              <input
-                type="text"
-                name="photoUrl"
-                placeholder="Enter your photo URL"
-                className="input input-bordered w-full max-w-xs"
-                value={formData.photoUrl}
-                onChange={handleChange}
-              />
-            </label>
-
-            {/* Age */}
             <label className="form-control w-full max-w-xs mb-5">
               <div className="label">
                 <span className="label-text">Age</span>
@@ -148,7 +128,6 @@ const EditProfile = () => {
               </div>
             </label>
 
-            {/* About */}
             <label className="form-control w-full max-w-xs mb-5">
               <div className="label">
                 <span className="label-text">About</span>
@@ -165,7 +144,6 @@ const EditProfile = () => {
               </div>
             </label>
 
-            {/* Gender */}
             <label className="form-control w-full max-w-xs mb-5">
               <div className="label">
                 <span className="label-text">Gender</span>
@@ -183,7 +161,6 @@ const EditProfile = () => {
               </select>
             </label>
 
-            {/* Skills */}
             <label className="form-control w-full max-w-xs mb-5">
               <div className="label">
                 <span className="label-text">Skills</span>
