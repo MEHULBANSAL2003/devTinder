@@ -23,14 +23,8 @@ const Signup = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
-
-    if (!file) {
-      toast.error("No file selected.");
-      return;
-    }
 
     setImage(file);
     try {
@@ -55,7 +49,7 @@ const Signup = () => {
         });
 
         setImageUrl(response.data.key);
-        toast.success("Image uploaded successfully.");
+        toast.success("image uploaded successfully");
       } else {
         toast.error(response.data.message);
       }
@@ -63,6 +57,8 @@ const Signup = () => {
       toast.error("Failed to upload image. Please try again.");
     }
   };
+
+
   const handleSignup = async () => {
     const message = validateSignUpData(
       firstName,
@@ -212,6 +208,7 @@ const Signup = () => {
                   Selected: {image.name}
                 </div>
               )}
+             
               <div className="text-red-600 mt-1">
                 {error && error.startsWith("Image") && <p>{error}</p>}
               </div>
