@@ -48,8 +48,6 @@ const Signup = () => {
           },
         });
 
-
-
         setImageUrl(response.data.key);
         toast.success("image uploaded successfully");
       } else {
@@ -59,7 +57,6 @@ const Signup = () => {
       toast.error("Failed to upload image. Please try again.");
     }
   };
-
 
   const handleSignup = async (e) => {
     const message = validateSignUpData(
@@ -106,7 +103,7 @@ const Signup = () => {
           navigate("/feed");
         }
       } catch (err) {
-        toast.error(err.response.data.message);
+        toast.error(err?.response?.data?.message);
         setFirstName("");
         setLastName("");
         setEmailId("");
@@ -116,7 +113,6 @@ const Signup = () => {
       }
     }
   };
-
 
   const togglePasswordVisibility = () => {
     if (password.current) {
@@ -210,7 +206,7 @@ const Signup = () => {
                   Selected: {image.name}
                 </div>
               )}
-             
+
               <div className="text-red-600 mt-1">
                 {error && error.startsWith("Image") && <p>{error}</p>}
               </div>

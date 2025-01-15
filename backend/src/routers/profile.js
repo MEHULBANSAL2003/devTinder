@@ -9,10 +9,13 @@ const profileRouter = express.Router();
 
 const { userAuth } = require("../middlewares/auth.js");
 const User = require("../models/user.js");
+const { getObjectInS3 } = require("../utils/s3.js");
 
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
     const user = req.user;
+
+    console.log(user);
 
     res.json({
       result: "success",
@@ -81,17 +84,21 @@ profileRouter.get("/profile/view/:userId", userAuth, async (req, res) => {
     const user = await User.findById(req.params.userId).select(
       "-password -emailId"
     );
- 
-   
+
     if (!user) throw new Error("invalid request..!!");
-     
+
+    console.log(user);
+    if (user.photoUrl.startsWith("signup-images")) {
+      let url = await getObjectInS3(user.photoUrl);
+      user.photoUrl = url;
+    }
+
     res.status(200).json({
       result: "success",
       message: "profile fetched successfully",
       data: user,
     });
   } catch (err) {
-    
     res.status(404).json({
       result: "error",
       message: ` ${err.message}`,

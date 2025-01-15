@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
 const client = new S3Client({
@@ -37,4 +37,30 @@ const putObjectInS3 = async (filename, contentType) => {
   }
 };
 
-module.exports = { putObjectInS3 };
+const getObjectInS3=async(keyy)=>{
+
+  try{
+
+  const command = new GetObjectCommand({
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: keyy,
+  });
+
+
+  const url=await getSignedUrl(client,command,{expiresIn:3600});
+
+  return url;
+
+}
+catch(err){
+   return {
+    result:"error",
+    message:err.message
+   }
+}
+
+
+
+}
+
+module.exports = { putObjectInS3,getObjectInS3};
