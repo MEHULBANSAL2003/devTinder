@@ -48,6 +48,8 @@ const Signup = () => {
           },
         });
 
+
+
         setImageUrl(response.data.key);
         toast.success("image uploaded successfully");
       } else {
@@ -59,7 +61,7 @@ const Signup = () => {
   };
 
 
-  const handleSignup = async () => {
+  const handleSignup = async (e) => {
     const message = validateSignUpData(
       firstName,
       lastName,

@@ -61,11 +61,7 @@ const userSchema = new Schema(
       type: String,
       default:
         "https://img.freepik.com/premium-vector/businessman-avatar-illustration-cartoon-user-portrait-user-profile-icon_118339-4382.jpg",
-      validate(value) {
-        if (!validator.isURL(value)) {
-          throw new Error("invalid URL " + value);
-        }
-      },
+     
     },
     about: {
       type: String,

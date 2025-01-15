@@ -30,7 +30,7 @@ const putObjectInS3 = async (filename, contentType) => {
     return {
       result: "success",
       url: url,
-      key: `https://${process.env.AWS_BUCKET_NAME}.s3.ap-south-1.amazonaws.com/${keyy}`,
+      key: keyy,
     };
   } catch (err) {
     return { result: "error", message: err.message };
