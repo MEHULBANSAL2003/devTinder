@@ -10,11 +10,11 @@ import { IoLogIn } from "react-icons/io5";
 const Navbar = () => {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
-  const handleLogin=()=>{
+  const handleLogin = () => {
     navigate("/login");
-  }
+  };
 
   const handleLogout = async () => {
     const url = `${import.meta.env.VITE_BACKEND_URL}/logout`;
@@ -44,12 +44,11 @@ const Navbar = () => {
           DevTinder
         </Link>
       </div>
-      {!user && 
-      <button onClick={handleLogin} className="mx-4">
-         <IoLogIn  size={40}/>
-      </button>
-       
-      }
+      {!user && (
+        <button onClick={handleLogin} className="mx-4">
+          <IoLogIn size={40} />
+        </button>
+      )}
       {user && (
         <div className="flex-none gap-2">
           <Link to="/requests">
@@ -83,6 +82,11 @@ const Navbar = () => {
               <li>
                 <Link to="/connections">Connections</Link>
               </li>
+
+              <li>
+                <Link to="/user/change-password"> Change Password</Link>
+              </li>
+
               <li onClick={handleLogout}>
                 <a>Logout</a>
               </li>
@@ -90,7 +94,6 @@ const Navbar = () => {
           </div>
         </div>
       )}
-
     </div>
   );
 };

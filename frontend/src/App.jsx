@@ -7,6 +7,7 @@ import Loader from "./components/Loader";
 import { addUser } from "./redux/userSlice";
 import axios from "axios";
 import ViewProfile from "./pages/ViewProfile";
+import ChangePassword from "./pages/ChangePassword";
 const Login = lazy(() => import("./pages/Login"));
 const Feed = lazy(() => import("./pages/Feed"));
 const Home = lazy(() => import("./pages/Home"));
@@ -101,6 +102,10 @@ function App() {
             <Route
               path="/requests"
               element={userData ? <Requests /> : <Navigate to="/login" />}
+            />
+             <Route
+              path="/user/change-password"
+              element={userData ? <ChangePassword /> : <Navigate to="/login" />}
             />
           </Route>
 
