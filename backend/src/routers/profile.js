@@ -87,11 +87,11 @@ profileRouter.get("/profile/view/:userId", userAuth, async (req, res) => {
 
     if (!user) throw new Error("invalid request..!!");
 
-    console.log(user);
-    if (user.photoUrl.startsWith("signup-images")) {
-      let url = await getObjectInS3(user.photoUrl);
-      user.photoUrl = url;
-    }
+    // console.log(user);
+    // if (user.photoUrl.startsWith("signup-images")) {
+    //   let url = await getObjectInS3(user.photoUrl);
+    //   user.photoUrl = url;
+    // }
 
     res.status(200).json({
       result: "success",

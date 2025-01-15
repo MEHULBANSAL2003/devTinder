@@ -83,7 +83,7 @@ const Signup = () => {
         emailId: emailId,
         password: password,
       };
-
+        
       if (imageUrl) {
         data.imageUrl = imageUrl;
       }

@@ -30,7 +30,7 @@ const putObjectInS3 = async (filename, contentType) => {
     return {
       result: "success",
       url: url,
-      key: keyy,
+      key: process.env.AWS_CLOUDFRONT_DOMAIN+"/"+keyy,
     };
   } catch (err) {
     return { result: "error", message: err.message };
