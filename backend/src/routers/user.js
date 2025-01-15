@@ -16,17 +16,6 @@ userRouter.get("/user/requests/recieved", userAuth, async (req, res) => {
       status: "interested",
     }).populate("fromUserId", ["firstName", "lastName", "photoUrl"]);
 
-    
-
-    // for (let i = 0; i < requests.length; i++) {
-    //   let url = requests[i].fromUserId.photoUrl;
-
-    //   if (url.startsWith("signup-images")) {
-    //     url = await getObjectInS3(url);
-    //     requests[i].fromUserId.photoUrl = url;
-    //   }
-    // }
-
     res.json({
       result: "success",
       message: "requests fetched successfully",
@@ -67,15 +56,6 @@ userRouter.get("/user/connection", userAuth, async (req, res) => {
         user: row.fromUserId,
       };
     });
-
-    // for (let i = 0; i < data.length; i++) {
-    //   let url = data[i].user.photoUrl;
-
-    //   if (url.startsWith("signup-images")) {
-    //     url = await getObjectInS3(url);
-    //     data[i].user.photoUrl = url;
-    //   }
-    // }
 
     res.json({
       result: "success",
@@ -124,15 +104,6 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
       .select("-password -email -createdAt -updatedAt -__v")
       .skip(skip)
       .limit(limit);
-
-    // for (let i = 0; i < data.length; i++) {
-    //   let url = data[i].photoUrl;
-
-    //   if (url.startsWith("signup-images")) {
-    //     url = await getObjectInS3(url);
-    //     data[i].photoUrl = url;
-    //   }
-    // }
 
     res.json({
       result: "success",
@@ -194,15 +165,6 @@ userRouter.get("/user/search", userAuth, async (req, res) => {
     });
 
     const filteredData = data.filter((user) => user !== null);
-
-    // for (let i = 0; i < filteredData.length; i++) {
-    //   let url = filteredData[i].user.photoUrl;
-
-    //   if (url.startsWith("signup-images")) {
-    //     url = await getObjectInS3(url);
-    //     filteredData[i].user.photoUrl = url;
-    //   }
-    // }
 
     res.status(200).json({
       result: "success",

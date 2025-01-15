@@ -22,7 +22,7 @@ const Feed = () => {
       }
     } catch (err) {
       setLoading(false);
-      console.log(err);
+    
     }
   };
 
