@@ -16,11 +16,56 @@ const Signup = () => {
   const [gender, setGender] = useState("");
   const [username, setUsername] = useState("");
   const [error, setError] = useState(null);
+  const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+
+    if (!file) {
+      toast.error("No file selected.");
+      return;
+    }
+
+    setImage(file);
+
+    // Request a signed URL from the backend
+    try {
+      const filename = encodeURIComponent(file.name);
+      const contentType = file.type;
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/generate-upload-url`,
+        {
+          filename,
+          contentType,
+        }
+      );
+
+      if (response.data.result === "success") {
+        // Upload the image directly to S3 using the signed URL
+        const signedUrl = response.data.url;
+
+        await axios.put(signedUrl, file, {
+          headers: {
+            "Content-Type": contentType,
+          },
+        });
+
+        setImageUrl(response.data.key);
+        toast.success("Image uploaded successfully.");
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (err) {
+      toast.error("Failed to upload image. Please try again.");
+    }
+  };
   const handleSignup = async () => {
     const message = validateSignUpData(
       firstName,
@@ -45,6 +90,7 @@ const Signup = () => {
             firstName: firstName,
             lastName: lastName,
             userName: username,
+            imageUrl:imageUrl,
             age: age,
             gender: gender,
             emailId: emailId,
@@ -70,6 +116,7 @@ const Signup = () => {
       }
     }
   };
+
 
   const togglePasswordVisibility = () => {
     if (password.current) {
@@ -145,6 +192,26 @@ const Signup = () => {
               />
               <div className="text-red-600 mt-1 text-md">
                 {error && error.startsWith("User") && <p>{error}</p>}
+              </div>
+            </label>
+
+            <label className="form-control w-full max-w-xs mb-5">
+              <div className="label">
+                <span className="label-text">Profile Image</span>
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                className="file-input file-input-bordered w-full max-w-xs"
+                onChange={handleImageChange}
+              />
+              {image && (
+                <div className="text-green-500 mt-2 text-sm">
+                  Selected: {image.name}
+                </div>
+              )}
+              <div className="text-red-600 mt-1">
+                {error && error.startsWith("Image") && <p>{error}</p>}
               </div>
             </label>
 

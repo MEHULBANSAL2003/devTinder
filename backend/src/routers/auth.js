@@ -6,12 +6,13 @@ const {
   validateSignUpData,
   validateLoginData,
 } = require("../utils/validation.js");
+const { putObjectInS3 } = require("../utils/s3.js");
 
 authRouter.post("/signup", async (req, res) => {
   // validating the data
   try {
     validateSignUpData(req);
-    const { firstName, lastName, userName, gender, age, emailId, password } =
+    const { firstName, lastName, userName,imageUrl, gender, age, emailId, password } =
       req.body;
 
     const registeredUser = await User.find({ emailId: emailId });
@@ -31,6 +32,7 @@ authRouter.post("/signup", async (req, res) => {
       age,
       emailId,
       password: hashedPassword,
+      photoUrl:imageUrl
     });
     await user.save();
 
@@ -104,5 +106,22 @@ authRouter.post("/logout", async (req, res) => {
     });
   }
 });
+
+authRouter.post("/generate-upload-url", async (req, res)=>{
+
+  const { filename, contentType } = req.body;
+
+  if (!filename || !contentType) {
+    return res.status(400).json({ result: "error", message: "Missing filename or content-type." });
+  }
+
+  const response = await putObjectInS3(filename, contentType);
+  if (response.result === "success") {
+    res.status(200).json(response);
+  } else {
+    res.status(500).json(response);
+  }
+
+})
 
 module.exports = { authRouter };
