@@ -6,9 +6,9 @@ import Loader from "../components/Loader";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ServerError from "../components/ServerError";
+import { addUser } from "../redux/userSlice";
 
 const Profile = () => {
- 
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,33 +16,30 @@ const Profile = () => {
   const [newProfilePic, setNewProfilePic] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [user,setUser]=useState(null);
+  const [user, setUser] = useState(null);
+  const dispatch = useDispatch();
 
+  const fetchUser = async () => {
+    const url = `${import.meta.env.VITE_BACKEND_URL}/profile/view`;
 
- 
-const fetchUser=async()=>{
-  const url= `${import.meta.env.VITE_BACKEND_URL}/profile/view`;
+    try {
+      const response = await axios({
+        method: "get",
+        url: url,
+        withCredentials: true,
+      });
 
-try{
-  const response=await axios({
-    method:"get",
-    url:url,
-    withCredentials:true
-  });
-   
-  if(response.data.result==="success"){
-    setUser(response.data.data);
-  }
-}
-catch(err){
-  toast.error(err.response.data.message);
-}
-}
+      if (response.data.result === "success") {
+        setUser(response.data.data);
+      }
+    } catch (err) {
+      toast.error(err.response.data.message);
+    }
+  };
 
-
-useEffect(()=>{ 
-  fetchUser();
-},[]);
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   const handleEditProfile = () => {
     navigate("/profile/edit");
@@ -72,8 +69,6 @@ useEffect(()=>{
     setError(null);
     setNewProfilePic(e.target.files[0]);
   };
-
-
 
   const handleUpload = async () => {
     setIsUpdateModalOpen(false);
@@ -114,9 +109,9 @@ useEffect(()=>{
           withCredentials: true,
         });
 
-       
         if (res.data.result === "success") {
           setUser(res.data.data);
+          dispatch(addUser(res.data.data));
           toast.success(res.data.message);
         }
       }
@@ -130,8 +125,8 @@ useEffect(()=>{
   if (loading) {
     return <Loader />;
   }
-  if(!user){
-    return <ServerError/>
+  if (!user) {
+    return <ServerError />;
   }
 
   return (
@@ -146,7 +141,7 @@ useEffect(()=>{
         <div className="flex  flex-col md:flex-row items-center gap-8 relative">
           <div className="relative">
             <img
-              src={user.photoUrl} 
+              src={user.photoUrl}
               alt={`${user.firstName} ${user.lastName}`}
               className="w-40 h-40 rounded-full object-cover border-4 border-indigo-300"
             />

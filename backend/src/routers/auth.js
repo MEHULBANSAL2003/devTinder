@@ -6,7 +6,8 @@ const {
   validateSignUpData,
   validateLoginData,
 } = require("../utils/validation.js");
-const { putObjectInS3 } = require("../utils/s3.js");
+const { putObjectInS3,deleteObjectFromS3 } = require("../utils/s3.js");
+const { userAuth } = require("../middlewares/auth.js");
 
 authRouter.post("/signup", async (req, res) => {
   try {
@@ -130,5 +131,42 @@ authRouter.post("/generate-upload-url", async (req, res) => {
     res.status(500).json(response);
   }
 });
+
+authRouter.post("/deleteS3image",userAuth,async(req,res)=>{
+  const { imageKey } = req.body;
+
+  if (!imageKey) {
+    return res.status(400).json({
+      result:"error",
+      message: "Image key is required",
+    });
+  };
+
+  try {
+    
+    const response = await deleteObjectFromS3(imageKey);
+
+    if (response.result==="success") {
+      return res.status(200).json({
+         result:"success",
+        message: response.message,
+      });
+    } else {
+      return res.status(500).json({
+        result:"error",
+        message: response.message || "Failed to delete image from S3",
+      });
+    }
+  } catch (err) {
+    console.error("Error in deleting image:", err);
+    return res.status(500).json({
+      result:"error",
+      message: "An error occurred while deleting the image",
+    });
+  }
+
+
+
+})
 
 module.exports = { authRouter };

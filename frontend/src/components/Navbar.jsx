@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { removeUser } from "../redux/userSlice";
+import { removeUser,addUser } from "../redux/userSlice";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { IoIosNotifications } from "react-icons/io";
@@ -11,6 +11,8 @@ const Navbar = () => {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  console.log(user);
 
   const handleLogin = () => {
     navigate("/login");

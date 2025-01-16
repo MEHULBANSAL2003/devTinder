@@ -35,6 +35,7 @@ function App() {
         url: url,
         withCredentials: true,
       });
+      console.log(response.data.data);
 
       dispatch(addUser(response.data.data));
       sessionStorage.setItem("user", JSON.stringify(response.data.data));
