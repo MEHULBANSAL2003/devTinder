@@ -3,6 +3,7 @@ import Loader from "../components/Loader";
 import axios from "axios";
 import RequestCard from "../components/RequestCard";
 import { useNavigate } from "react-router-dom";
+import ServerError from "../components/ServerError";
 
 const Requests = () => {
   const [userData, setUserData] = useState(null);
@@ -42,7 +43,8 @@ const Requests = () => {
     );
   };
 
-  if (loading || !userData) return <Loader />;
+  if (loading ) return <Loader />;
+  if(!userData) return <ServerError/>
   if (userData.length === 0) {
     return (
       <div className="flex flex-col items-center text-white mt-48 mb-52">

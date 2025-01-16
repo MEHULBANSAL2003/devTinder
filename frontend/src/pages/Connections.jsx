@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Loader from "../components/Loader";
 import { useNavigate } from "react-router-dom";
 import ConnectionCard from "../components/ConnectionCard";
+import ServerError from "../components/ServerError";
 
 const Connections = () => {
   const [connection, setConnection] = useState(null);
@@ -92,8 +93,12 @@ const Connections = () => {
     );
   };
 
-  if (loading || !connection) {
+  if (loading) {
     return <Loader />;
+  }
+
+  if(!connection){
+    return <ServerError/>
   }
 
   return (

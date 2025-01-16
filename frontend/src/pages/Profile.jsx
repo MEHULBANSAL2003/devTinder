@@ -5,6 +5,7 @@ import { FaCamera } from "react-icons/fa";
 import Loader from "../components/Loader";
 import axios from "axios";
 import { toast } from "react-toastify";
+import ServerError from "../components/ServerError";
 
 const Profile = () => {
  
@@ -126,8 +127,11 @@ useEffect(()=>{
     }
   };
 
-  if (loading || !user) {
+  if (loading) {
     return <Loader />;
+  }
+  if(!user){
+    return <ServerError/>
   }
 
   return (

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import UserFeedCard from "../components/UserFeedCard";
 import axios from "axios";
 import Loader from "../components/Loader";
+import ServerError from "../components/ServerError";
 
 const Feed = () => {
   const [userData, setUserData] = useState(null);
@@ -36,7 +37,9 @@ const Feed = () => {
     );
   };
 
-  if (loading || !userData) return <Loader />;
+  if (loading) return <Loader />;
+
+  if(!userData) return <ServerError/>
 
   if (userData.length === 0) {
     return (
