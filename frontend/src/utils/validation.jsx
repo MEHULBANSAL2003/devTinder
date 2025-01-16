@@ -65,3 +65,21 @@ export const validateProfileEditData = (firstName, lastName, age, about) => {
 
   return null;
 };
+
+export const validateChangePasswordData = (currPass, newPass, rePass) => {
+  if (currPass === "") return "Current Password should not be empty";
+  if (newPass === "") return "New Password should not be empty";
+  if (rePass === "") return "Re-enter Password should not be empty";
+
+  const isPasswordValid =
+    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(
+      newPass
+    );
+
+  if (!isPasswordValid) return "New Password must be strong";
+
+  if (newPass !== rePass)
+    return "Re-enter password must be same as that of current password";
+
+  return null;
+};

@@ -2,6 +2,7 @@ const express = require("express");
 const userRouter = express.Router();
 const ConnectionRequestModel = require("../models/connectionRequests");
 const User = require("../models/user");
+const bcrypt = require("bcrypt");
 
 const { userAuth } = require("../middlewares/auth");
 const { getObjectInS3 } = require("../utils/s3");
@@ -65,7 +66,7 @@ userRouter.get("/user/connection", userAuth, async (req, res) => {
   } catch (err) {
     res.status(400).json({
       result: "error",
-      message: `ERROR : ${err.message}`,
+      message: err.message,
     });
   }
 });
@@ -113,7 +114,7 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
   } catch (err) {
     res.status(400).json({
       result: "error",
-      message: `ERROR : ${err.message}`,
+      message: err.message,
     });
   }
 });
@@ -173,9 +174,40 @@ userRouter.get("/user/search", userAuth, async (req, res) => {
   } catch (err) {
     res.status(500).json({
       result: "error",
-      message: `Error: ${err.message}`,
+      message: err.message,
     });
   }
 });
 
+userRouter.post("/user/change-password", userAuth, async (req, res) => {
+  const currUser = req.user;
+  const { currPass, newPass } = req.body;
+  try {
+    const isPasswordValid = await bcrypt.compare(currPass, currUser.password);
+
+    if (!isPasswordValid) throw new Error("Current password is incorrect");
+
+    if (currPass === newPass)
+      throw new Error("curr password and new password cant be same");
+
+    const hashedPassword = await bcrypt.hash(newPass, 10);
+
+    const user = await User.findOneAndUpdate(
+      { emailId: currUser.emailId },
+      { password: hashedPassword }
+    );
+
+    console.log(user);
+
+    res.status(200).json({
+      result: "success",
+      message: "password updated successfully",
+    });
+  } catch (err) {
+    res.status(500).json({
+      result: "error",
+      message: err.message,
+    });
+  }
+});
 module.exports = { userRouter };
