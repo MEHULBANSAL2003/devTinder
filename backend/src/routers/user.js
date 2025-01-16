@@ -3,9 +3,8 @@ const userRouter = express.Router();
 const ConnectionRequestModel = require("../models/connectionRequests");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
-
 const { userAuth } = require("../middlewares/auth");
-const { getObjectInS3 } = require("../utils/s3");
+
 
 // get all the pending connection requests for the logged in user
 userRouter.get("/user/requests/recieved", userAuth, async (req, res) => {
