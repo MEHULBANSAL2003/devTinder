@@ -12,7 +12,7 @@ const Signup = () => {
   const [lastName, setLastName] = useState("");
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
-  const [age, setAge] = useState(null);
+  const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [username, setUsername] = useState("");
   const [error, setError] = useState(null);

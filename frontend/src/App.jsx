@@ -40,9 +40,9 @@ function App() {
       sessionStorage.setItem("user", JSON.stringify(response.data.data));
       setIsUserFetched(true);
       setIsLoading(false);
-    } catch (err) {
-        
+    } catch (err) {  
       setIsLoading(false);
+      navigate("/signup");
     }
   };
 
@@ -57,6 +57,7 @@ function App() {
     }
   }, []);
 
+ 
   if (isLoading) {
     return <Loader />;
   }
