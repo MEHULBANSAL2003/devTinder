@@ -12,12 +12,19 @@ const { profileRouter } = require("./src/routers/profile.js");
 const { requestRouter } = require("./src/routers/requests.js");
 const { userRouter } = require("./src/routers/user.js");
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
+
+const corsOptions = {
+  origin: 'http://localhost:5173', 
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'], 
+};
+
+app.use(cors(corsOptions));
+
+
+
+
 
 app.use("/", authRouter);
 
