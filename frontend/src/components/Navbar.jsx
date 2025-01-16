@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { removeUser } from "../redux/userSlice";
@@ -8,9 +8,31 @@ import { IoIosNotifications } from "react-icons/io";
 import { IoLogIn } from "react-icons/io5";
 
 const Navbar = () => {
-  const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  const fetchUser = async () => {
+    const url = `${import.meta.env.VITE_BACKEND_URL}/profile/view`;
+
+    try {
+      const response = await axios({
+        method: "get",
+        url: url,
+        withCredentials: true,
+      });
+
+      if (response.data.result === "success") {
+        setUser(response.data.data);
+      }
+    } catch (err) {
+      toast.error(err.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   const handleLogin = () => {
     navigate("/login");

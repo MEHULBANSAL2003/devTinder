@@ -1,14 +1,13 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaCamera } from "react-icons/fa";
 import Loader from "../components/Loader";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { addUser } from "../redux/userSlice";
 
 const Profile = () => {
-  const user = useSelector((store) => store.user);
+ 
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,9 +15,33 @@ const Profile = () => {
   const [newProfilePic, setNewProfilePic] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const dispatch = useDispatch();
+  const [user,setUser]=useState(null);
+
 
  
+const fetchUser=async()=>{
+  const url= `${import.meta.env.VITE_BACKEND_URL}/profile/view`;
+
+try{
+  const response=await axios({
+    method:"get",
+    url:url,
+    withCredentials:true
+  });
+   
+  if(response.data.result==="success"){
+    setUser(response.data.data);
+  }
+}
+catch(err){
+  toast.error(err.response.data.message);
+}
+}
+
+
+useEffect(()=>{ 
+  fetchUser();
+},[]);
 
   const handleEditProfile = () => {
     navigate("/profile/edit");
@@ -92,7 +115,7 @@ const Profile = () => {
 
        
         if (res.data.result === "success") {
-          dispatch(addUser(res.data.data));
+          setUser(res.data.data);
           toast.success(res.data.message);
         }
       }
@@ -103,7 +126,7 @@ const Profile = () => {
     }
   };
 
-  if (loading) {
+  if (loading || !user) {
     return <Loader />;
   }
 
