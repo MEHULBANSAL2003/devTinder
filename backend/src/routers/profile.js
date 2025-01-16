@@ -97,4 +97,28 @@ profileRouter.get("/profile/view/:userId", userAuth, async (req, res) => {
   }
 });
 
+profileRouter.post(
+  "/profile/edit/profilepicture",
+  userAuth,
+  async (req, res) => {
+    try {
+      const imageUrl = req.body.imageUrl;
+      const currUser = req.user;
+      currUser.photoUrl = imageUrl;
+      await currUser.save();
+
+      res.status(200).send({
+        result: "success",
+        message: "profile picture updated successfully",
+        data: currUser,
+      });
+    } catch (err) {
+      res.status(404).json({
+        result: "error",
+        message: ` ${err.message}`,
+      });
+    }
+  }
+);
+
 module.exports = { profileRouter };

@@ -58,7 +58,7 @@ userRouter.get("/user/connection", userAuth, async (req, res) => {
       };
     });
 
-    console.log(data);
+   
       
     res.json({
       result: "success",
@@ -200,7 +200,7 @@ userRouter.post("/user/change-password", userAuth, async (req, res) => {
       { password: hashedPassword }
     );
 
-    console.log(user);
+    
 
     res.status(200).json({
       result: "success",
