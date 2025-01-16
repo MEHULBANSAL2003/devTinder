@@ -112,6 +112,7 @@ const Profile = () => {
         if (res.data.result === "success") {
           setUser(res.data.data);
           dispatch(addUser(res.data.data));
+          sessionStorage.removeItem("user");
           toast.success(res.data.message);
         }
       }

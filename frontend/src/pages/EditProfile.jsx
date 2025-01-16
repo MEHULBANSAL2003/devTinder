@@ -62,6 +62,7 @@ const EditProfile = () => {
       if (response.data.result == "success") {
         toast.success(response.data.message);
         dispatch(addUser(response.data.data));
+        sessionStorage.removeItem("user");
         navigate("/profile");
       }
     } catch (err) {
