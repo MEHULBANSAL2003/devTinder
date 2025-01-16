@@ -6,6 +6,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from "../redux/userSlice";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const Signup = () => {
   const [firstName, setFirstName] = useState("");
@@ -19,6 +20,7 @@ const Signup = () => {
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -27,6 +29,7 @@ const Signup = () => {
     const file = e.target.files[0];
 
     setImage(file);
+    setLoading(true);
     try {
       const filename = encodeURIComponent(file.name);
       const contentType = file.type;
@@ -55,6 +58,9 @@ const Signup = () => {
       }
     } catch (err) {
       toast.error("Failed to upload image. Please try again.");
+    }
+    finally{
+      setLoading(false);
     }
   };
 
@@ -201,7 +207,15 @@ const Signup = () => {
                 className="file-input file-input-bordered w-full max-w-xs"
                 onChange={handleImageChange}
               />
-              {image && (
+              
+              {loading && (
+              <div className="flex items-center mt-2 text-blue-500">
+                <AiOutlineLoading3Quarters className="animate-spin mr-2" />
+                Uploading...
+              </div>
+            )}
+
+              {image&&!loading && (
                 <div className="text-green-500 mt-2 text-sm">
                   Selected: {image.name}
                 </div>
