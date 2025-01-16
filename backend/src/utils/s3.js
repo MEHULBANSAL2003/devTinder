@@ -14,7 +14,7 @@ const putObjectInS3 = async (filename, contentType) => {
   try {
     let keyy;
     if (contentType.startsWith("image/")) {
-      keyy = `signup-images/${filename}`;
+      keyy = `signup-images/${Date.now()}-${filename}`;
     } else {
       return { result: "error", message: "invalid content-type" };
     }
