@@ -10,15 +10,15 @@ const Connections = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
-  const debounceTimeout = useRef(null); // Reference for debounce timeout
+  const debounceTimeout = useRef(null); 
 
   const handleMakeConnection = () => {
     navigate("/feed");
   };
 
-  // Debounced search handler
+
   const handleKeyUpSearch = async () => {
-    clearTimeout(debounceTimeout.current); // Clear previous timeout
+    clearTimeout(debounceTimeout.current);
 
     debounceTimeout.current = setTimeout(async () => {
       const url = `${
@@ -36,7 +36,7 @@ const Connections = () => {
           setFilteredConnection(response.data.data);
         }
       } catch (err) {}
-    }, 500); // Set delay for debouncing (500ms)
+    }, 500); 
   };
 
   const handleSearch = async () => {
@@ -75,7 +75,10 @@ const Connections = () => {
         setConnection(response.data.data);
         setFilteredConnection(response.data.data);
       }
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {

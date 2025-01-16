@@ -58,6 +58,8 @@ userRouter.get("/user/connection", userAuth, async (req, res) => {
       };
     });
 
+    console.log(data);
+      
     res.json({
       result: "success",
       message: "succefully fetched the connections",
@@ -166,6 +168,7 @@ userRouter.get("/user/search", userAuth, async (req, res) => {
     });
 
     const filteredData = data.filter((user) => user !== null);
+
 
     res.status(200).json({
       result: "success",

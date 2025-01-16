@@ -42,7 +42,6 @@ function App() {
       setIsLoading(false);
     } catch (err) {  
       setIsLoading(false);
-      navigate("/login");
     }
   };
 
