@@ -35,8 +35,9 @@ const EditProfile = () => {
     );
     setError(message);
 
-    const skill = formData.skills;
-
+    let skill = formData.skills;
+    
+    skill = Array.isArray(skill) ? skill.join(', ') : skill;
     const skillsArray = skill
       .split(",")
       .map((skill) => skill.trim())
