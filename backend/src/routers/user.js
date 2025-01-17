@@ -5,7 +5,6 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const { userAuth } = require("../middlewares/auth");
 
-
 // get all the pending connection requests for the logged in user
 userRouter.get("/user/requests/recieved", userAuth, async (req, res) => {
   try {
@@ -22,9 +21,9 @@ userRouter.get("/user/requests/recieved", userAuth, async (req, res) => {
       data: requests,
     });
   } catch (err) {
-    res.status(400).json({
+    res.status(err.status||500).json({
       result: "error",
-      message: `ERROR : ${err.message}`,
+      message: err.message||"Internal server error",
     });
   }
 });
@@ -57,17 +56,15 @@ userRouter.get("/user/connection", userAuth, async (req, res) => {
       };
     });
 
-   
-      
     res.json({
       result: "success",
       message: "succefully fetched the connections",
       data: data,
     });
   } catch (err) {
-    res.status(400).json({
+    res.status(err.status||500).json({
       result: "error",
-      message: err.message,
+      message: err.message||"Internal server error",
     });
   }
 });
@@ -113,10 +110,11 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
       data: data,
     });
   } catch (err) {
-    res.status(400).json({
+    res.status(err.status||500).json({
       result: "error",
-      message: err.message,
+      message: err.message||"Internal server error",
     });
+    
   }
 });
 
@@ -168,15 +166,14 @@ userRouter.get("/user/search", userAuth, async (req, res) => {
 
     const filteredData = data.filter((user) => user !== null);
 
-
     res.status(200).json({
       result: "success",
       data: filteredData,
     });
   } catch (err) {
-    res.status(500).json({
+    res.status(err.status||500).json({
       result: "error",
-      message: err.message,
+      message: err.message||"Internal server error",
     });
   }
 });
@@ -187,10 +184,10 @@ userRouter.post("/user/change-password", userAuth, async (req, res) => {
   try {
     const isPasswordValid = await bcrypt.compare(currPass, currUser.password);
 
-    if (!isPasswordValid) throw new Error("Current password is incorrect");
+    if (!isPasswordValid) throw {status:400, message:"Current password is incorrect"}
 
     if (currPass === newPass)
-      throw new Error("curr password and new password cant be same");
+      throw {status:400,message:"new password can't be same as that os old passwrord"};
 
     const hashedPassword = await bcrypt.hash(newPass, 10);
 
@@ -199,16 +196,14 @@ userRouter.post("/user/change-password", userAuth, async (req, res) => {
       { password: hashedPassword }
     );
 
-    
-
     res.status(200).json({
       result: "success",
       message: "password updated successfully",
     });
   } catch (err) {
-    res.status(500).json({
+    res.status(err.status||500).json({
       result: "error",
-      message: err.message,
+      message: err.message||"Internal server error",
     });
   }
 });

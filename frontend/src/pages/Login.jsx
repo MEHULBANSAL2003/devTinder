@@ -78,8 +78,8 @@ const Login = () => {
         }
 
         if (err.response?.status === 400) {
-          // setEmailId("");
-          // setPassword("");
+          setEmailId("");
+          setPassword("");
         }
       }
       finally{

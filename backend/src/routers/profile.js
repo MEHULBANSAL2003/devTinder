@@ -20,9 +20,9 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
       data: user,
     });
   } catch (err) {
-    res.status(400).json({
+    res.status(err.status||500).json({
       result: "error",
-      message: ` ${err}`,
+      message: err.message||"Internal server error",
     });
   }
 });
@@ -30,7 +30,7 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
 profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
   try {
     if (!validateProfileEditData(req)) {
-      throw new Error("Invalid edit Request");
+      throw {status:400,message:"invalid request"};
     }
 
     const currUser = req.user;
@@ -45,9 +45,9 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
       data: currUser,
     });
   } catch (err) {
-    res.status(400).json({
+    res.status(err.status||500).json({
       result: "error",
-      message: `${err}`,
+      message: err.message||"Internal server error",
     });
   }
 });
@@ -69,9 +69,9 @@ profileRouter.patch("/profile/password", userAuth, async (req, res) => {
       data: currUser,
     });
   } catch (err) {
-    res.status(400).json({
+    res.status(err.status||500).json({
       result: "error",
-      message: `${err}`,
+      message: err.message||"Internal server error",
     });
   }
 });
@@ -82,7 +82,7 @@ profileRouter.get("/profile/view/:userId", userAuth, async (req, res) => {
       "-password -emailId"
     );
 
-    if (!user) throw new Error("invalid request..!!");
+    if (!user) throw {status:400,message:"invalid request"};
 
     res.status(200).json({
       result: "success",
@@ -90,9 +90,9 @@ profileRouter.get("/profile/view/:userId", userAuth, async (req, res) => {
       data: user,
     });
   } catch (err) {
-    res.status(404).json({
+    res.status(err.status||500).json({
       result: "error",
-      message: ` ${err.message}`,
+      message: err.message||"Internal server error",
     });
   }
 });
@@ -113,9 +113,9 @@ profileRouter.post(
         data: currUser,
       });
     } catch (err) {
-      res.status(404).json({
+      res.status(err.status||500).json({
         result: "error",
-        message: ` ${err.message}`,
+        message: err.message||"Internal server error",
       });
     }
   }

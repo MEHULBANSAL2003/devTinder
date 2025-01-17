@@ -30,9 +30,9 @@ requestRouter.post("/request/send/:status/:toUserId",
         data: data,
       });
     } catch (err) {
-      res.status(400).json({
+      res.status(err.status||500).json({
         result: "error",
-        message: `ERROR : ${err.message}`,
+        message: err.message||"Internal server error",
       });
     }
   }
@@ -56,9 +56,9 @@ requestRouter.post("/request/review/:status/:requestId",
         data: data,
       });
     } catch (err) {
-      res.status(400).json({
+      res.status(err.status||500).json({
         result: "error",
-        message: `ERROR : ${err}`,
+        message: err.message||"Internal server error",
       });
     }
   }
@@ -71,7 +71,7 @@ userAuth, async (req, res) => {
 
   const user = await User.findById(toUserId);
 
-  if (!user) throw new Error("user doesn't exists!!");
+  if (!user) throw {status:400,message:"user doesnt exists"};
 
   try {
     const data = await ConnectionRequestModel.findOneAndDelete({
@@ -84,9 +84,9 @@ userAuth, async (req, res) => {
       message: "request cancelled successfully",
     });
   } catch (err) {
-    res.status(400).json({
+    res.status(err.status||500).json({
       result: "error",
-      message: `ERROR : ${err.message}`,
+      message: err.message||"Internal server error",
     });
   }
 });
@@ -99,7 +99,8 @@ requestRouter.post("/request/remove/:reqId",
     const request = await ConnectionRequestModel.findByIdAndDelete(reqId);
 
     if (!request) {
-      throw new Error("Invalid request. No matching connection found.");
+      
+      throw {status:400,message:"Invalid request. No matching connection found."};
     }
 
     res.status(200).json({
@@ -107,10 +108,12 @@ requestRouter.post("/request/remove/:reqId",
       message: "Connection removed successfully",
     });
   } catch (err) {
-    res.status(400).json({
+
+    res.status(err.status||500).json({
       result: "error",
-      message: `ERROR: ${err.message}`,
+      message: err.message||"Internal server error",
     });
+   
   }
 });
 

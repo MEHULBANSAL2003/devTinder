@@ -22,8 +22,45 @@ const Feed = () => {
         setLoading(false);
       }
     } catch (err) {
+      let errorMessage = "Something went wrong";
+
+      if (err.response) {
+        const status = err.response.status;
+
+        if (status === 400) {
+          errorMessage =
+            err.response.data?.message ||
+            "Invalid input. Please check your data.";
+          toast.error(errorMessage);
+        } else if (status === 500) {
+          navigate("/error", {
+            state: {
+              message: "Our servers are down. Please try again later.",
+            },
+          });
+        } else {
+          errorMessage = `Error ${status}: ${
+            err.response.data?.message || "An unexpected error occurred."
+          }`;
+          toast.error(errorMessage);
+        }
+      } else if (err.request) {
+        navigate("/error", {
+          state: {
+            message:
+              "Unable to connect to the server. Please check your internet connection.",
+          },
+        });
+      } else {
+        navigate("/error", {
+          state: {
+            message: "An unknown error occurred. Please try again later.",
+          },
+        });
+      }
+    }
+    finally{
       setLoading(false);
-    
     }
   };
 
@@ -37,7 +74,7 @@ const Feed = () => {
     );
   };
 
-  if (loading|| !userData) return <Loader />;
+  if (loading) return <Loader />;
 
 
 

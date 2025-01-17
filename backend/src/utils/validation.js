@@ -7,35 +7,36 @@ const validateSignUpData = (req) => {
     req.body;
 
   if (!firstName || !lastName) {
-    throw {status:400,message:"Name is required"};
+    throw { status: 400, message: "Name is required" };
   }
 
   if (firstName.length < 4 || firstName.length > 50) {
-    throw {status:400,message:"name should contain 4-50 characters"}
+    throw { status: 400, message: "name should contain 4-50 characters" };
   }
-  if (userName === "")  throw {status:400,message:"username is required"};
+  if (userName === "") throw { status: 400, message: "username is required" };
   if (userName.length < 4 || userName.length > 50) {
-    throw {status:400,message:"user name should contain 4-50 characters"}
+    throw { status: 400, message: "user name should contain 4-50 characters" };
   }
 
-  if (age === "")  throw {status:400,message:"Age is required"}
-  if (gender === "")  throw {status:400,message:"PLease select your gender"}
+  if (age === "") throw { status: 400, message: "Age is required" };
+  if (gender === "")
+    throw { status: 400, message: "PLease select your gender" };
   if (age < 18) {
-    throw {status:400,message:"You must be minimum 18 years old"};
+    throw { status: 400, message: "You must be minimum 18 years old" };
   }
 
   if (!validator.isEmail(emailId)) {
-    throw {status:400,message:"Invalid email"}
+    throw { status: 400, message: "Invalid email" };
   }
 
   if (!validator.isStrongPassword(password)) {
-    throw {status:400,message:"enter strong password"}
+    throw { status: 400, message: "enter strong password" };
   }
 };
 
 const validateLoginData = (req) => {
   if (!validator.isEmail(req.body.emailId)) {
-    throw {status:400,message:"Invalid email"};
+    throw { status: 400, message: "Invalid email" };
   }
 };
 
@@ -81,18 +82,18 @@ const validateSendConnectionRequestData = async (req) => {
 
   const allowedStatus = ["ignored", "interested"];
   if (!allowedStatus.includes(status)) {
-    throw new Error("Invalid status type: " + status);
+    throw { status: 400, message: `invalid status type: ${status}` };
   }
 
   const toUser = await User.findById(toUserId);
 
   if (!toUser) {
-    throw new Error("user doesn't exist");
+    throw { status: 400, message: "user doesn't exist" };
   }
 
   // we can also do this with mongoose pre middleware
   if (fromUserId.equals(toUserId)) {
-    throw new Error("cannot send request to youself");
+    throw { status: 400, message: "can't send request to youself" };
   }
 
   const existingRequest = await ConnectionRequestModel.findOne({
@@ -103,7 +104,7 @@ const validateSendConnectionRequestData = async (req) => {
   });
 
   if (existingRequest) {
-    throw new Error("request already exists");
+    throw { status: 400, message: "request already exists" };
   }
 };
 
@@ -118,23 +119,23 @@ const validateRequestReviewData = async (req) => {
   const status = req.params.status;
   const request = await ConnectionRequestModel.findById(requestId);
   if (!request) {
-    throw new Error("invalid request id");
+    throw { status: 400, message: "invalid request id" };
   }
 
   const toUserId = request.toUserId;
 
   if (!currUser.equals(toUserId)) {
-    throw new Error("you are not logged in.");
+    throw { status: 400, message: "you are not logged in" };
   }
 
   const allowedStatus = ["accepted", "rejected"];
 
   if (!allowedStatus.includes(status)) {
-    throw new Error(`invalid status type : ${status}`);
+    throw { status: 400, message: `invalid status type : ${status}` };
   }
 
   if (request.status !== "interested") {
-    throw new Error("not allowed to change the status");
+    throw { status: 400, message: "not allowed to change the status" };
   }
 
   req.request = request;

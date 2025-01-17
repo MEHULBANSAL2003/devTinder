@@ -17,16 +17,16 @@ const userAuth = async (req, res, next) => {
 
     const user = await User.findById(_id);
     if (!user) {
-      throw new Error("user not found. Login to access");
+      throw {status:400,message:"User not found.Login to access"};
     }
 
     req.user = user;
     next();
   } catch (err) {
-    res.status(400).json({
-      result:"error",
-      message: `ERROR : ${err}`
-    })
+    res.status(err.status||500).json({
+      result: "error",
+      message: err.message||"Internal server error",
+    });
   }
 };
 
