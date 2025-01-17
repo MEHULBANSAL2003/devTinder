@@ -48,9 +48,9 @@ const PostCard = ({ post }) => {
 
           <div className="flex py-2">
             {post.content && (
-              <div>
+              <div className="flex">
                 <h1 className="font-bold">{postedBy.userName}</h1>
-                <h1 className="mx-2 font-normal">{post.content}</h1>
+                <h1 className="mx-3 font-normal">{post.content}</h1>
               </div>
             )}
           </div>
