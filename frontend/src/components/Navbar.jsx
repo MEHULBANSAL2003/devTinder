@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { removeUser,addUser } from "../redux/userSlice";
+import { removeUser, addUser } from "../redux/userSlice";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { IoIosNotifications } from "react-icons/io";
@@ -11,7 +11,6 @@ const Navbar = () => {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
 
   const handleLogin = () => {
     navigate("/login");
@@ -27,7 +26,10 @@ const Navbar = () => {
       });
 
       if (response.data.result == "success") {
-        toast.success(response.data.message,{autoClose:1000,position:"top-center"});
+        toast.success(response.data.message, {
+          autoClose: 1000,
+          position: "top-center",
+        });
 
         dispatch(removeUser());
         sessionStorage.removeItem("user");
@@ -41,7 +43,7 @@ const Navbar = () => {
   return (
     <div className="navbar bg-base-300">
       <div className="flex-1">
-        <Link to="/feed" className="btn btn-ghost text-xl">
+        <Link to="/posts" className="btn btn-ghost text-xl">
           DevTinder
         </Link>
       </div>

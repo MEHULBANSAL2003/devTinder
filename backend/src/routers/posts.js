@@ -89,6 +89,7 @@ postRouter.get("/posts", userAuth, async (req, res) => {
           "postedBy.firstName": 1,
           "postedBy.lastName": 1,
           "postedBy.userName": 1,
+          "postedBy.photoUrl":1
         },
       },
     ];

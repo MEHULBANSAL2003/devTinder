@@ -73,15 +73,15 @@ function App() {
           <Route path="/" element={<Body />}>
             <Route
               path="/"
-              element={!userData ? <Home /> : <Navigate to="/feed" />}
+              element={!userData ? <Home /> : <Navigate to="/posts" />}
             />
             <Route
               path="/login"
-              element={!userData ? <Login /> : <Navigate to="/feed" />}
+              element={!userData ? <Login /> : <Navigate to="/posts" />}
             />
             <Route
               path="/signup"
-              element={!userData ? <Signup /> : <Navigate to="/feed" />}
+              element={!userData ? <Signup /> : <Navigate to="/posts" />}
             />
             <Route
               path="/feed"
