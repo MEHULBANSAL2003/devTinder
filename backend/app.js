@@ -11,20 +11,16 @@ const { authRouter } = require("./src/routers/auth.js");
 const { profileRouter } = require("./src/routers/profile.js");
 const { requestRouter } = require("./src/routers/requests.js");
 const { userRouter } = require("./src/routers/user.js");
-
+const { postRouter } = require("./src/routers/posts.js");
 
 const corsOptions = {
-  origin: 'http://localhost:5173', 
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
+  origin: "http://localhost:5173",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization'], 
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions));
-
-
-
-
 
 app.use("/", authRouter);
 
@@ -33,6 +29,8 @@ app.use("/", profileRouter);
 app.use("/", requestRouter);
 
 app.use("/", userRouter);
+
+app.use("/", postRouter);
 
 connectDB()
   .then(() => {
@@ -44,4 +42,3 @@ connectDB()
   .catch((err) => {
     console.log("an error occured while connecting to database", err);
   });
-  

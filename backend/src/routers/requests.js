@@ -71,9 +71,10 @@ userAuth, async (req, res) => {
 
   const user = await User.findById(toUserId);
 
-  if (!user) throw {status:400,message:"user doesnt exists"};
+
 
   try {
+    if (!user) throw {status:400,message:"user doesnt exists"};
     const data = await ConnectionRequestModel.findOneAndDelete({
       fromUserId: currUser,
       toUserId: toUserId,
