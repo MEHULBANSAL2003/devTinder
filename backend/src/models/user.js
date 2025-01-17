@@ -70,6 +70,19 @@ const userSchema = new Schema(
     skills: {
       type: [String],
     },
+    posts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
+    replies: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Reply",
+      },
+    ],
+  
   },
   { timestamps: true }
 );
