@@ -4,19 +4,17 @@ import Loader from "../components/Loader";
 import { useNavigate } from "react-router-dom";
 import ConnectionCard from "../components/ConnectionCard";
 
-
 const Connections = () => {
   const [connection, setConnection] = useState(null);
   const [filteredConnection, setFilteredConnection] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
-  const debounceTimeout = useRef(null); 
+  const debounceTimeout = useRef(null);
 
   const handleMakeConnection = () => {
     navigate("/feed");
   };
-
 
   const handleKeyUpSearch = async () => {
     clearTimeout(debounceTimeout.current);
@@ -37,7 +35,7 @@ const Connections = () => {
           setFilteredConnection(response.data.data);
         }
       } catch (err) {}
-    }, 500); 
+    }, 500);
   };
 
   const handleSearch = async () => {
@@ -72,19 +70,53 @@ const Connections = () => {
       });
 
       if (response.data.result === "success") {
-        setLoading(false);
         setConnection(response.data.data);
         setFilteredConnection(response.data.data);
       }
     } catch (err) {
-      console.log(err);
+      let errorMessage = "Something went wrong";
+
+      if (err.response) {
+        const status = err.response.status;
+
+        if (status === 400) {
+          errorMessage =
+            err.response.data?.message ||
+            "Invalid input. Please check your data.";
+          toast.error(errorMessage);
+        } else if (status === 500) {
+          navigate("/error", {
+            state: {
+              message: "Our servers are down. Please try again later.",
+            },
+          });
+        } else {
+          errorMessage = `Error ${status}: ${
+            err.response.data?.message || "An unexpected error occurred."
+          }`;
+          toast.error(errorMessage);
+        }
+      } else if (err.request) {
+        navigate("/error", {
+          state: {
+            message:
+              "Unable to connect to the server. Please check your internet connection.",
+          },
+        });
+      } else {
+        navigate("/error", {
+          state: {
+            message: "An unknown error occurred. Please try again later.",
+          },
+        });
+      }
+    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
     getAllConnections();
-    setLoading(false);
   }, []);
 
   const handleActionComplete = (userId) => {
@@ -96,7 +128,6 @@ const Connections = () => {
   if (loading) {
     return <Loader />;
   }
-
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-800 to-gray-900 flex flex-col items-center p-6">
@@ -132,7 +163,7 @@ const Connections = () => {
               Search
             </button>
           </div>
-          {filteredConnection&&filteredConnection.length === 0 && (
+          {filteredConnection && filteredConnection.length === 0 && (
             <h1 className="text-white text-2xl font-bold text-center mt-20 sm:mt-40 mx-4 sm:mx-16">
               No such connection found..!!
             </h1>

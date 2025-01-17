@@ -5,10 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { validateProfileEditData } from "../utils/validation";
 import { addUser } from "../redux/userSlice";
+import Loader from "../components/Loader";
+
 
 const EditProfile = () => {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
+  const [loading,setLoading]=useState(false);
 
   const [formData, setFormData] = useState({
     firstName: user.firstName,
@@ -34,6 +37,10 @@ const EditProfile = () => {
       formData.about
     );
     setError(message);
+
+  if(message===null){
+
+  
 
     let skill = formData.skills;
     
@@ -68,7 +75,13 @@ const EditProfile = () => {
     } catch (err) {
       toast.error(err.response?.data?.message);
     }
+    finally{
+      setLoading(false);
+    }
+  }
   };
+
+  if(loading) return <Loader/>
 
   return (
     <div className="flex justify-center my-8">

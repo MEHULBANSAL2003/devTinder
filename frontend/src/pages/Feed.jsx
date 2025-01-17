@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import UserFeedCard from "../components/UserFeedCard";
 import axios from "axios";
 import Loader from "../components/Loader";
-
+import { useNavigate } from "react-router-dom";
 
 const Feed = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchUserFeedData = async () => {
     const url = `${import.meta.env.VITE_BACKEND_URL}/user/feed`;
@@ -58,8 +59,7 @@ const Feed = () => {
           },
         });
       }
-    }
-    finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -76,9 +76,7 @@ const Feed = () => {
 
   if (loading) return <Loader />;
 
-
-
-  if (userData.length === 0) {
+  if (userData && userData?.length === 0) {
     return (
       <div className="text-2xl font-semibold mt-40 mx-[44%]">No more users</div>
     );
@@ -87,11 +85,15 @@ const Feed = () => {
   return (
     <div className="flex justify-center items-center mt-16">
       <div className="flex overflow-x-scroll  snap-x snap-mandatory w-full max-w-3xl space-x-4 p-4">
-        {userData.map((user) => (
-          <div key={user._id} className="snap-center shrink-0 w-full">
-            <UserFeedCard user={user} onActionComplete={handleActionComplete} />
-          </div>
-        ))}
+        {userData &&
+          userData.map((user) => (
+            <div key={user._id} className="snap-center shrink-0 w-full">
+              <UserFeedCard
+                user={user}
+                onActionComplete={handleActionComplete}
+              />
+            </div>
+          ))}
       </div>
     </div>
   );

@@ -16,7 +16,9 @@ const ChangePassword = () => {
   const [rePass, setRePass] = useState("");
   const [currPass, setCurrPass] = useState("");
   const [error, setError] = useState("");
+  const [loading,setLoading]=useState(false);
   const navigate = useNavigate();
+  
 
   const togglePasswordVisibility = (field) => {
     setShowPasswords((prev) => ({
@@ -34,6 +36,7 @@ const ChangePassword = () => {
       setError(message);
 
       if (message === null) {
+        setLoading(true);
         const url = `${import.meta.env.VITE_BACKEND_URL}/user/change-password`;
 
         const response = await axios({
@@ -53,6 +56,9 @@ const ChangePassword = () => {
       }
     } catch (err) {
       toast.error(err.response.data.message);
+    }
+    finally{
+      setLoading(false);
     }
   };
 
@@ -167,7 +173,7 @@ const ChangePassword = () => {
 
           <div className="card-actions justify-center mt-6">
             <button onClick={handleChangePassword} className="btn btn-primary">
-              Change Password
+              {loading?"Changing password":"Change Password"}
             </button>
           </div>
         </div>

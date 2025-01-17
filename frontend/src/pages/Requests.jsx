@@ -4,7 +4,6 @@ import axios from "axios";
 import RequestCard from "../components/RequestCard";
 import { useNavigate } from "react-router-dom";
 
-
 const Requests = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,6 +24,43 @@ const Requests = () => {
         setLoading(false);
       }
     } catch (err) {
+      let errorMessage = "Something went wrong";
+
+      if (err.response) {
+        const status = err.response.status;
+
+        if (status === 400) {
+          errorMessage =
+            err.response.data?.message ||
+            "Invalid input. Please check your data.";
+          toast.error(errorMessage);
+        } else if (status === 500) {
+          navigate("/error", {
+            state: {
+              message: "Our servers are down. Please try again later.",
+            },
+          });
+        } else {
+          errorMessage = `Error ${status}: ${
+            err.response.data?.message || "An unexpected error occurred."
+          }`;
+          toast.error(errorMessage);
+        }
+      } else if (err.request) {
+        navigate("/error", {
+          state: {
+            message:
+              "Unable to connect to the server. Please check your internet connection.",
+          },
+        });
+      } else {
+        navigate("/error", {
+          state: {
+            message: "An unknown error occurred. Please try again later.",
+          },
+        });
+      }
+    } finally {
       setLoading(false);
     }
   };
@@ -43,9 +79,9 @@ const Requests = () => {
     );
   };
 
-  if (loading|| !userData ) return <Loader />;
+  if (loading) return <Loader />;
 
-  if (userData.length === 0) {
+  if (userData?.length === 0) {
     return (
       <div className="flex flex-col items-center text-white mt-48 mb-52">
         <p className="text-xl font-bold mb-4">No more Pending requests!!</p>

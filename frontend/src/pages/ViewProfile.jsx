@@ -4,7 +4,6 @@ import axios from "axios";
 import Loader from "../components/Loader";
 import { toast } from "react-toastify";
 
-
 const ViewProfile = () => {
   const { id } = useParams();
   const [profile, setProfile] = useState(null);
@@ -28,10 +27,41 @@ const ViewProfile = () => {
         setError("User not found.");
       }
     } catch (err) {
-      if (err.response && err.response.status === 404) {
-        setError("User not found.");
+      let errorMessage = "Something went wrong";
+
+      if (err.response) {
+        const status = err.response.status;
+
+        if (status === 400) {
+          errorMessage =
+            err.response.data?.message ||
+            "Invalid input. Please check your data.";
+          toast.error(errorMessage);
+        } else if (status === 500) {
+          navigate("/error", {
+            state: {
+              message: "Our servers are down. Please try again later.",
+            },
+          });
+        } else {
+          errorMessage = `Error ${status}: ${
+            err.response.data?.message || "An unexpected error occurred."
+          }`;
+          toast.error(errorMessage);
+        }
+      } else if (err.request) {
+        navigate("/error", {
+          state: {
+            message:
+              "Unable to connect to the server. Please check your internet connection.",
+          },
+        });
       } else {
-        setError("An error occurred. Please try again.");
+        navigate("/error", {
+          state: {
+            message: "An unknown error occurred. Please try again later.",
+          },
+        });
       }
     } finally {
       setLoading(false);
@@ -45,7 +75,6 @@ const ViewProfile = () => {
   if (loading) {
     return <Loader />;
   }
-  
 
   if (error) {
     return (
