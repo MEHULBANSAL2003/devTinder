@@ -7,11 +7,10 @@ import { validateProfileEditData } from "../utils/validation";
 import { addUser } from "../redux/userSlice";
 import Loader from "../components/Loader";
 
-
 const EditProfile = () => {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
-  const [loading,setLoading]=useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: user.firstName,
@@ -38,50 +37,48 @@ const EditProfile = () => {
     );
     setError(message);
 
-  if(message===null){
+    if (message === null) {
+      setLoading(true);
 
-  
+      let skill = formData.skills;
 
-    let skill = formData.skills;
-    
-    skill = Array.isArray(skill) ? skill.join(', ') : skill;
-    const skillsArray = skill
-      .split(",")
-      .map((skill) => skill.trim())
-      .filter((skill) => skill !== "");
+      skill = Array.isArray(skill) ? skill.join(", ") : skill;
+      const skillsArray = skill
+        .split(",")
+        .map((skill) => skill.trim())
+        .filter((skill) => skill !== "");
 
-    try {
-      const url = `${import.meta.env.VITE_BACKEND_URL}/profile/edit`;
-      const response = await axios.patch(
-        url,
-        {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          age: formData.age,
-          about: formData.about,
-          gender: formData.gender,
-          skills: skillsArray,
-        },
+      try {
+        const url = `${import.meta.env.VITE_BACKEND_URL}/profile/edit`;
+        const response = await axios.patch(
+          url,
+          {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            age: formData.age,
+            about: formData.about,
+            gender: formData.gender,
+            skills: skillsArray,
+          },
 
-        { withCredentials: true }
-      );
+          { withCredentials: true }
+        );
 
-      if (response.data.result == "success") {
-        toast.success(response.data.message);
-        dispatch(addUser(response.data.data));
-        sessionStorage.removeItem("user");
-        navigate("/profile");
+        if (response.data.result == "success") {
+          toast.success(response.data.message);
+          dispatch(addUser(response.data.data));
+          sessionStorage.removeItem("user");
+          navigate("/profile");
+        }
+      } catch (err) {
+        toast.error(err.response?.data?.message);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      toast.error(err.response?.data?.message);
     }
-    finally{
-      setLoading(false);
-    }
-  }
   };
 
-  if(loading) return <Loader/>
+  if (loading) return <Loader />;
 
   return (
     <div className="flex justify-center my-8">
