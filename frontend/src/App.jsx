@@ -19,6 +19,7 @@ const EditProfile = lazy(() => import("./pages/EditProfile"));
 const Connections = lazy(() => import("./pages/Connections"));
 const Requests = lazy(() => import("./pages/Requests"));
 const Error = lazy(() => import("./components/Error"));
+const Posts=lazy(()=>import("./pages/Posts"));
 
 function App() {
   const userData = useSelector((store) => store.user);
@@ -109,6 +110,12 @@ function App() {
               path="/user/change-password"
               element={userData ? <ChangePassword /> : <Navigate to="/login" />}
             />
+             
+             <Route
+              path="/posts"
+              element={userData ? <Posts /> : <Navigate to="/login" />}
+            />
+
             <Route
               path="/error"
               element={ <ErrorPage />}

@@ -68,6 +68,10 @@ const Feed = () => {
     fetchUserFeedData();
   }, []);
 
+  const handleExplorePosts=()=>{
+    navigate("/posts");
+  }
+
   const handleActionComplete = (userId) => {
     setUserData((prevUserData) =>
       prevUserData.filter((user) => user._id !== userId)
@@ -78,7 +82,15 @@ const Feed = () => {
 
   if (userData && userData?.length === 0) {
     return (
-      <div className="text-2xl font-semibold mt-40 mx-[44%]">No more users</div>
+      <div>
+      <div className="text-2xl md:text-4xl font-semibold mt-64 mx-[20%] md:mt-48 md:mx-[38%] text-white">That's all for now..!!</div>
+      <button
+          onClick={handleExplorePosts}
+            className="bg-green-500 hover:bg-green-600 px-6 py-3  mt-6 mx-[28%] md:mx-[44%] rounded-lg text-white text-lg font-semibold shadow-lg"
+          >
+            Explore Posts
+          </button>
+      </div>
     );
   }
 
