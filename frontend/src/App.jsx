@@ -1,6 +1,6 @@
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import { Suspense, lazy, useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "./components/Loader";
@@ -19,7 +19,7 @@ const EditProfile = lazy(() => import("./pages/EditProfile"));
 const Connections = lazy(() => import("./pages/Connections"));
 const Requests = lazy(() => import("./pages/Requests"));
 const Error = lazy(() => import("./components/Error"));
-const Posts=lazy(()=>import("./pages/Posts"));
+const Post=lazy(()=>import("./pages/Post"));
 
 function App() {
   const userData = useSelector((store) => store.user);
@@ -114,7 +114,7 @@ function App() {
              
              <Route
               path="/posts"
-              element={userData ? <Posts /> : <Navigate to="/login" />}
+              element={userData ? <Post /> : <Navigate to="/login" />}
             />
 
             <Route

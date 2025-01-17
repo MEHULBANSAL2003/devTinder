@@ -3,7 +3,7 @@ import Loader from "../components/Loader";
 import axios from "axios";
 import PostCard from "../components/PostCard";
 
-const Posts = () => {
+const Post = () => {
   const [posts, setPosts] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -68,4 +68,4 @@ const Posts = () => {
   );
 };
 
-export default Posts;
+export default Post;
