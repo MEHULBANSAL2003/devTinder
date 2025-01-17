@@ -50,7 +50,7 @@ const ChangePassword = () => {
         });
 
         if (response.data.result === "success") {
-          toast.success(response.data.message);
+          toast.success(response.data.message,{autoClose:1000});
           navigate("/profile");
         }
       }

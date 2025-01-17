@@ -27,7 +27,7 @@ const Navbar = () => {
       });
 
       if (response.data.result == "success") {
-        toast.success(response.data.message);
+        toast.success(response.data.message,{autoClose:1000,position:"top-center"});
 
         dispatch(removeUser());
         sessionStorage.removeItem("user");

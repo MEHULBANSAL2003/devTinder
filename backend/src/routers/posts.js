@@ -70,8 +70,28 @@ postRouter.get("/posts", userAuth, async (req, res) => {
       {
         $sort: { createdAt: -1 },
       },
+      {
+        $lookup: {
+          from: "users",
+          localField: "postedBy",
+          foreignField: "_id",
+          as: "postedBy",
+        },
+      },
+      {
+        $unwind: "$postedBy",
+      },
+      {
+        $project: {
+          imageUrl: 1,
+          content: 1,
+          createdAt: 1,
+          "postedBy.firstName": 1,
+          "postedBy.lastName": 1,
+          "postedBy.userName": 1,
+        },
+      },
     ];
-
     const posts = await Post.aggregate(pipeline);
 
     res.status(200).json({
@@ -86,7 +106,5 @@ postRouter.get("/posts", userAuth, async (req, res) => {
     });
   }
 });
-
-
 
 module.exports = { postRouter };

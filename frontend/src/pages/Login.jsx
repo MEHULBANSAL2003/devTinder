@@ -35,7 +35,7 @@ const Login = () => {
           withCredentials: true,
         });
         if (response.data.result == "success") {
-          toast.success(response.data.message);
+          toast.success(response.data.message,{autoClose:1000});
           dispatch(addUser(response.data.data));
           navigate("/feed");
         }

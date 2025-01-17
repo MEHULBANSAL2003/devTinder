@@ -1,6 +1,6 @@
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import { Suspense, lazy, useEffect, useState } from "react";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "./components/Loader";
@@ -58,6 +58,8 @@ function App() {
       fetchUser();
     }
   }, []);
+
+
 
  
   if (isLoading) {
