@@ -29,13 +29,22 @@ const putObjectInS3 = async (filename, contentType) => {
 
     let url = await getSignedUrl(client, command);
 
-    return {
-      result: "success",
-      url: url,
-      key: process.env.AWS_CLOUDFRONT_DOMAIN + "/" + keyy,
-    };
+    if(url){
+      return {
+        status:200,
+        result: "success",
+        url: url,
+        key: process.env.AWS_CLOUDFRONT_DOMAIN + "/" + keyy,
+      };
+      
+    }
+    else{
+      return {status:400,result:"error",message:"some error occured"};
+    }
+
+    
   } catch (err) {
-    return { result: "error", message: err.message };
+    return {status:500, result: "error", message: err.message };
   }
 };
 

@@ -7,35 +7,35 @@ const validateSignUpData = (req) => {
     req.body;
 
   if (!firstName || !lastName) {
-    throw new Error("Name is not valid!");
+    throw {status:400,message:"Name is required"};
   }
 
   if (firstName.length < 4 || firstName.length > 50) {
-    throw new Error("First Name should contain 4-50 characters");
+    throw {status:400,message:"name should contain 4-50 characters"}
   }
-  if (userName === "") return "UserName is required";
+  if (userName === "")  throw {status:400,message:"username is required"};
   if (userName.length < 4 || userName.length > 50) {
-    throw new Error("username should contain 4-50 characters");
+    throw {status:400,message:"user name should contain 4-50 characters"}
   }
 
-  if (age === "") throw new Error("Age is required");
-  if (gender === "") throw new Error("Please enter your gender");
+  if (age === "")  throw {status:400,message:"Age is required"}
+  if (gender === "")  throw {status:400,message:"PLease select your gender"}
   if (age < 18) {
-    throw new Error("You must be miminum 18 years old");
+    throw {status:400,message:"You must be minimum 18 years old"};
   }
 
   if (!validator.isEmail(emailId)) {
-    throw new Error("enter the valid email address");
+    throw {status:400,message:"Invalid email"}
   }
 
   if (!validator.isStrongPassword(password)) {
-    throw new Error("enter the strong password");
+    throw {status:400,message:"enter strong password"}
   }
 };
 
 const validateLoginData = (req) => {
   if (!validator.isEmail(req.body.emailId)) {
-    throw new Error("enter the valid email address");
+    throw {status:400,message:"Invalid email"};
   }
 };
 

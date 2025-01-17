@@ -12,7 +12,6 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  console.log(user);
 
   const handleLogin = () => {
     navigate("/login");

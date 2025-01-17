@@ -21,6 +21,7 @@ const Signup = () => {
   const [imageUrl, setImageUrl] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [subLoading,setSubLoading]=useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -78,6 +79,7 @@ const Signup = () => {
     setError(message);
 
     if (message === null) {
+      setSubLoading(true);
       const url = `${import.meta.env.VITE_BACKEND_URL}/signup`;
 
       const data = {
@@ -108,15 +110,46 @@ const Signup = () => {
 
           navigate("/feed");
         }
-      } catch (err) {
-        toast.error(err?.response?.data?.message);
-        setFirstName("");
+      } 
+      catch (err) {
+      
+        let errorMessage = "Something went wrong";
+        
+      
+        if (err.response) {
+          const status = err.response.status;
+      
+          if (status === 400) {
+            errorMessage = err.response.data?.message || "Invalid input. Please check your data.";
+            toast.error(errorMessage);
+          } else if (status === 500) {
+
+            navigate("/error", { state: { message: "Our servers are down. Please try again later." } });
+          } else {
+            errorMessage = `Error ${status}: ${err.response.data?.message || "An unexpected error occurred."}`;
+            toast.error(errorMessage);
+          }
+        } else if (err.request) {
+
+          navigate("/error", { state: { message: "Unable to connect to the server. Please check your internet connection." } });
+        } else {
+          navigate("/error", { state: { message: "An unknown error occurred. Please try again later." } });
+        }
+
+        if (err.response?.status === 400) {
+           
+        }
+      }
+      finally{
+         setSubLoading(false);
+         setFirstName("");
         setLastName("");
         setEmailId("");
         setPassword("");
         setAge("");
         setUsername("");
       }
+      
     }
   };
 
@@ -317,7 +350,7 @@ const Signup = () => {
           </div>
           <div className="card-actions justify-center mt-6">
             <button className="btn btn-primary" onClick={handleSignup}>
-              Signup
+             {subLoading?"Signing up":"Signup"}
             </button>
           </div>
           <div className="font-semibold mt-4 flex justify-center">

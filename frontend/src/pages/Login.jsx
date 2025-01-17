@@ -12,6 +12,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading,setLoading]=useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -20,7 +21,8 @@ const Login = () => {
     const message = validateLoginData(emailId, password);
     setError(message);
 
-    if (message == null) {
+    if (message === null) {
+      setLoading(true);
       const url = `${import.meta.env.VITE_BACKEND_URL}/login`;
       try {
         const response = await axios({
@@ -38,10 +40,50 @@ const Login = () => {
           navigate("/feed");
         }
       } catch (err) {
-        console.log(err);
-        toast.error(err?.response?.data?.message);
-        setEmailId("");
-        setPassword("");
+        let errorMessage = "Something went wrong";
+
+        if (err.response) {
+          const status = err.response.status;
+
+          if (status === 400) {
+            errorMessage =
+              err.response.data?.message ||
+              "Invalid input. Please check your data.";
+            toast.error(errorMessage);
+          } else if (status === 500) {
+            navigate("/error", {
+              state: {
+                message: "Our servers are down. Please try again later.",
+              },
+            });
+          } else {
+            errorMessage = `Error ${status}: ${
+              err.response.data?.message || "An unexpected error occurred."
+            }`;
+            toast.error(errorMessage);
+          }
+        } else if (err.request) {
+          navigate("/error", {
+            state: {
+              message:
+                "Unable to connect to the server. Please check your internet connection.",
+            },
+          });
+        } else {
+          navigate("/error", {
+            state: {
+              message: "An unknown error occurred. Please try again later.",
+            },
+          });
+        }
+
+        if (err.response?.status === 400) {
+          // setEmailId("");
+          // setPassword("");
+        }
+      }
+      finally{
+        setLoading(false);
       }
     }
   };
@@ -109,7 +151,7 @@ const Login = () => {
           </div>
           <div className="card-actions justify-center mt-6">
             <button className="btn btn-primary" onClick={handleLoginClick}>
-              Login
+             {loading? "Logging in" : "Login"}
             </button>
           </div>
           <div className="font-semibold mt-4 flex justify-center">
