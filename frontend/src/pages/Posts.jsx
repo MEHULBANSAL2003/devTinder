@@ -21,7 +21,7 @@ const Posts = () => {
       if (response?.data?.result === "success") {
         setPosts(response?.data?.data);
       }
-      console.log(response?.data?.data);
+  
     } catch (err) {
       setError(err?.response?.data?.message);
     } finally {
@@ -47,7 +47,7 @@ const Posts = () => {
         {posts && posts.length > 0 ? (
           posts.map((post) => <PostCard key={post._id} post={post} />)
         ) : (
-          <div className="text-center text-white text-xl">
+          <div className="text-center text-white text-2xl">
             No posts available!
           </div>
         )}
@@ -58,11 +58,12 @@ const Posts = () => {
           </div>
         )}
       </div>
-      <div className="flex justify-center mt-12 py-4  border-t border-gray-800 text-slate-200 text-md">
+      {posts.length>0 &&<div className="flex justify-center mt-12 py-4  border-t border-gray-800 text-slate-200 text-md">
         <span className="font-medium ">
           You have reached the end of the posts..!!
         </span>
       </div>
+}
     </div>
   );
 };

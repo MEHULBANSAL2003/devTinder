@@ -8,6 +8,7 @@ const PostCard = ({ post }) => {
   const formattedDate = formatDistanceToNow(new Date(createdAt), {
     addSuffix: true,
   });
+  
 
   return (
     <div className="my-8 bg-gray-900 text-white max-w-2xl mx-auto rounded-lg shadow-lg overflow-hidden">
@@ -25,8 +26,6 @@ const PostCard = ({ post }) => {
           <p className="text-sm text-slate-200">{formattedDate}</p>
         </div>
       </div>
-
-      {/* Image */}
       <div className="relative">
         <img
           src={imageUrl}
@@ -38,11 +37,24 @@ const PostCard = ({ post }) => {
       </div>
 
       <div className="p-6">
-        <div className=" items-center justify-between text-white">
-          <div className="flex">
-            <CiHeart size={40} />
-            <div className="mx-3 my-1">
+        <div className="items-center justify-between text-white">
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-2">
+              <CiHeart size={40} />
+              {post.likedBy.length > 0 && (
+                <span className="text-sm text-gray-400">
+                  {post.likedBy.length}
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-2">
               <FaRegComment size={30} />
+              {post.replies.length > 0 && (
+                <span className="text-sm text-gray-400">
+                  {post.replies.length}
+                </span>
+              )}
             </div>
           </div>
 
