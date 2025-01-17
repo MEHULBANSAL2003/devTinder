@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loader from "../components/Loader";
 import { toast } from "react-toastify";
-import ServerError from "../components/ServerError";
+
 
 const ViewProfile = () => {
   const { id } = useParams();
@@ -45,7 +45,7 @@ const ViewProfile = () => {
   if (loading) {
     return <Loader />;
   }
-  if(!profile) return <ServerError/>
+  
 
   if (error) {
     return (

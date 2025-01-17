@@ -5,7 +5,6 @@ import { FaCamera } from "react-icons/fa";
 import Loader from "../components/Loader";
 import axios from "axios";
 import { toast } from "react-toastify";
-import ServerError from "../components/ServerError";
 import { addUser } from "../redux/userSlice";
 
 const Profile = () => {
@@ -123,14 +122,13 @@ const Profile = () => {
     }
   };
 
-  if (loading) {
+  if (loading || !user) {
     return <Loader />;
   }
-  if (!user) {
-    return <ServerError />;
-  }
+
 
   return (
+    
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-100 to-indigo-200">
       <div className="max-w-4xl w-full bg-white rounded-lg shadow-xl p-8 relative">
         <button
@@ -139,6 +137,7 @@ const Profile = () => {
         >
           Edit Profile
         </button>
+        
         <div className="flex  flex-col md:flex-row items-center gap-8 relative">
           <div className="relative">
             <img
@@ -188,7 +187,8 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <div className="mt-8">
+
+       <div className="mt-8">
           <h2 className="text-2xl font-semibold text-gray-800">Skills</h2>
           {user.skills.length > 0 ? (
             <ul className="list-disc list-inside mt-4 space-y-2 text-gray-700">
@@ -200,6 +200,7 @@ const Profile = () => {
             <p className="text-gray-500 mt-4">No skills added yet.</p>
           )}
         </div>
+
         <div className="mt-8 text-gray-500 text-sm">
           Member since: {new Date(user.createdAt).toDateString()}
         </div>
@@ -254,6 +255,7 @@ const Profile = () => {
         </div>
       )}
     </div>
+
   );
 };
 

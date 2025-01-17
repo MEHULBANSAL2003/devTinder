@@ -5,7 +5,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleCreateAccount = () => {
-    navigate("/signup"); // Replace "/signup" with the route for your signup page
+    navigate("/signup"); 
   };
 
   return (

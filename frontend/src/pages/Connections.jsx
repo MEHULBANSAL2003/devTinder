@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Loader from "../components/Loader";
 import { useNavigate } from "react-router-dom";
 import ConnectionCard from "../components/ConnectionCard";
-import ServerError from "../components/ServerError";
+
 
 const Connections = () => {
   const [connection, setConnection] = useState(null);
@@ -97,9 +97,6 @@ const Connections = () => {
     return <Loader />;
   }
 
-  if(!connection){
-    return <ServerError/>
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-800 to-gray-900 flex flex-col items-center p-6">
@@ -135,7 +132,7 @@ const Connections = () => {
               Search
             </button>
           </div>
-          {filteredConnection.length === 0 && (
+          {filteredConnection&&filteredConnection.length === 0 && (
             <h1 className="text-white text-2xl font-bold text-center mt-20 sm:mt-40 mx-4 sm:mx-16">
               No such connection found..!!
             </h1>
