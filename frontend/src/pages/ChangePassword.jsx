@@ -116,7 +116,7 @@ const ChangePassword = () => {
                 />
                 <button
                   onClick={() => togglePasswordVisibility("newPassword")}
-                  className="absolute fixed top-[40%] right-3 transform -translate-y-1/2 bg-transparent text-white hover:text-slate-100"
+                  className="absolute top-[40%] right-3 transform -translate-y-1/2 bg-transparent text-white hover:text-slate-100"
                   type="button"
                 >
                   {showPasswords.newPassword ? (
