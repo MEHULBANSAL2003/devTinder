@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 const PostCard = ({ post }) => {
   const userData = useSelector((store) => store.user);
   const [isLiked, setIsLiked] = useState(false);
+  const [error,setError]=useState(null);
   
 
   const { postedBy, imageUrl, createdAt, likedBy } = post;
@@ -44,7 +45,7 @@ const PostCard = ({ post }) => {
         });
 
         if (response.data.result === "success") {
-          console.log(response);
+        
           setIsLiked(true);
           setLikeCount(likeCount + 1);
         }
@@ -62,13 +63,14 @@ const PostCard = ({ post }) => {
         });
 
         if (response.data.result === "success") {
-          console.log(response);
+         
           setIsLiked(false);
           setLikeCount(likeCount - 1);
         }
       }
     } catch (err) {
-      console.log(err);
+      setError(err?.response?.data?.message||"something went wrong");
+      
     }
   };
 
@@ -144,7 +146,16 @@ const PostCard = ({ post }) => {
           </div>
         </div>
       </div>
+
+      {error && 
+     <div className="text-lg text-red bg-slate-200">
+       {err}
+     </div>
+    }
+
+
     </div>
+    
   );
 };
 
