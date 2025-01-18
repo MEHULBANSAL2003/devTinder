@@ -20,6 +20,7 @@ const Connections = lazy(() => import("./pages/Connections"));
 const Requests = lazy(() => import("./pages/Requests"));
 const Error = lazy(() => import("./components/Error"));
 const Post=lazy(()=>import("./pages/Post"));
+const ViewPost=lazy(()=>import("./pages/ViewPost"));
 
 function App() {
   const userData = useSelector((store) => store.user);
@@ -116,11 +117,17 @@ function App() {
               path="/posts"
               element={userData ? <Post /> : <Navigate to="/login" />}
             />
+            <Route
+              path="/posts/view/:id"
+              element={userData ? <ViewPost/> : <Navigate to="/login" />}
+            />
 
             <Route
               path="/error"
               element={ <ErrorPage />}
             />
+
+            
           </Route>
 
           <Route path="*" element={<Error />} />

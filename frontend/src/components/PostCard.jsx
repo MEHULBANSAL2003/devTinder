@@ -6,11 +6,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, closeButton }) => {
   const userData = useSelector((store) => store.user);
   const [isLiked, setIsLiked] = useState(false);
-  const [error,setError]=useState(null);
-  
+  const [error, setError] = useState(null);
 
   const { postedBy, imageUrl, createdAt, likedBy } = post;
   const [likeCount, setLikeCount] = useState(likedBy.length);
@@ -23,59 +22,37 @@ const PostCard = ({ post }) => {
     navigate(`/profile/${postedBy._id}`);
   };
 
-  useEffect(() => {
-    if (likedBy.includes(userData._id)) {
-      setIsLiked(true);
-    } else {
-      setIsLiked(false);
-    }
-  }, []);
-
   const handleLike = async () => {
     try {
-      if (!isLiked) {
-        const url = `${import.meta.env.VITE_BACKEND_URL}/post/like/${post._id}`;
-        const response = await axios({
-          method: "post",
-          url: url,
-          data: {
-            userId: userData._id,
-          },
-          withCredentials: true,
-        });
+      const url = `${import.meta.env.VITE_BACKEND_URL}/post/${isLiked ? "dislike" : "like"}/${post._id}`;
+      const response = await axios({
+        method: "post",
+        url: url,
+        data: { userId: userData._id },
+        withCredentials: true,
+      });
 
-        if (response.data.result === "success") {
-        
-          setIsLiked(true);
-          setLikeCount(likeCount + 1);
-        }
-      } else {
-        const url = `${import.meta.env.VITE_BACKEND_URL}/post/dislike/${
-          post._id
-        }`;
-        const response = await axios({
-          method: "post",
-          url: url,
-          data: {
-            userId: userData._id,
-          },
-          withCredentials: true,
-        });
-
-        if (response.data.result === "success") {
-         
-          setIsLiked(false);
-          setLikeCount(likeCount - 1);
-        }
+      if (response.data.result === "success") {
+        setIsLiked(!isLiked);
+        setLikeCount((prev) => prev + (isLiked ? -1 : 1));
       }
     } catch (err) {
-      setError(err?.response?.data?.message||"something went wrong");
-      
+      setError(err?.response?.data?.message || "Something went wrong");
     }
   };
 
   return (
-    <div className="my-8 bg-gray-900 text-white max-w-2xl mx-auto rounded-lg shadow-lg overflow-hidden">
+    <div className="relative my-8 bg-gray-900 text-white max-w-2xl mx-auto rounded-lg shadow-lg overflow-hidden">
+
+      {closeButton && (
+        <button
+          onClick={() => navigate(-1)} 
+          className="absolute top-4 right-4  text-white rounded-full p-2 hover:text-slate-400 focus:outline-none"
+        >
+          ✕
+        </button>
+      )}
+
       <div className="flex items-center p-3 border-b border-gray-700">
         <img
           onClick={handleViewProfile}
@@ -94,13 +71,13 @@ const PostCard = ({ post }) => {
           <p className="text-sm text-slate-200">{formattedDate}</p>
         </div>
       </div>
+
       <div className="relative">
         <img
           src={imageUrl}
           alt="Post"
           className="w-full h-[40rem] object-cover"
         />
-
         <div className="absolute inset-0 bg-black bg-opacity-20 hover:bg-opacity-50 transition duration-300"></div>
       </div>
 
@@ -125,7 +102,6 @@ const PostCard = ({ post }) => {
                 <span className="text-lg text-white">{likeCount}</span>
               )}
             </div>
-
             <div className="flex items-center space-x-2">
               <FaRegComment size={30} />
               {post.replies.length > 0 && (
@@ -135,27 +111,17 @@ const PostCard = ({ post }) => {
               )}
             </div>
           </div>
-
-          <div className="flex py-2">
-            {post.content && (
-              <div className="flex">
-                <h1 className="font-bold">{postedBy.userName}</h1>
-                <h1 className="mx-3 font-normal">{post.content}</h1>
-              </div>
-            )}
-          </div>
+          {post.content && (
+            <div className="flex py-2">
+              <h1 className="font-bold">{postedBy.userName}</h1>
+              <h1 className="mx-3 font-normal">{post.content}</h1>
+            </div>
+          )}
         </div>
       </div>
 
-      {error && 
-     <div className="text-lg text-red bg-slate-200">
-       {err}
-     </div>
-    }
-
-
+      {error && <div className="text-lg text-red-500">{error}</div>}
     </div>
-    
   );
 };
 

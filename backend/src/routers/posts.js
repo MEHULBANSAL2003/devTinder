@@ -3,6 +3,7 @@ const { userAuth } = require("../middlewares/auth");
 const Post = require("../models/post");
 const User = require("../models/user");
 const postRouter = express.Router();
+const mongoose = require("mongoose");
 
 postRouter.post("/post/createpost", userAuth, async (req, res) => {
   const currUser = req.user;
@@ -149,6 +150,64 @@ postRouter.post("/post/:status/:postId", userAuth, async (req, res) => {
       result: "success",
       message: `post ${status} succesfully`,
       data: post,
+    });
+  } catch (err) {
+    res.status(err.status || 500).json({
+      result: "error",
+      message: err.message || "Internal server error",
+    });
+  }
+});
+
+postRouter.get("/post/:postId", userAuth, async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const objectId = new mongoose.Types.ObjectId(postId);
+    const post = await Post.findById(postId);
+    if (!post) throw { status: 400, message: "no such posts exists" };
+
+    // to handle:  can't see the data of post which posted by a user who is not a connection of current user;
+
+    const pipeline = [
+      {
+        $match: {
+          _id: objectId,
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "postedBy",
+          foreignField: "_id",
+          as: "postedBy",
+        },
+      },
+      {
+        $unwind: "$postedBy",
+      },
+
+      {
+        $project: {
+          imageUrl: 1,
+          content: 1,
+          createdAt: 1,
+          likedBy: 1,
+          replies: 1,
+          "postedBy.firstName": 1,
+          "postedBy.lastName": 1,
+          "postedBy.userName": 1,
+          "postedBy.photoUrl": 1,
+          "postedBy._id": 1,
+        },
+      },
+    ];
+
+    const data = await Post.aggregate(pipeline);
+
+    res.status(200).json({
+      result: "success",
+      message: "post data fetched successfully",
+      data: data,
     });
   } catch (err) {
     res.status(err.status || 500).json({
