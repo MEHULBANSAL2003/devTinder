@@ -4,6 +4,7 @@ const Post = require("../models/post");
 const User = require("../models/user");
 const postRouter = express.Router();
 const mongoose = require("mongoose");
+const ConnectionRequestModel = require("../models/connectionRequests");
 
 postRouter.post("/post/createpost", userAuth, async (req, res) => {
   const currUser = req.user;
@@ -166,7 +167,18 @@ postRouter.get("/post/:postId", userAuth, async (req, res) => {
     const post = await Post.findById(postId);
     if (!post) throw { status: 400, message: "no such posts exists" };
 
-    // to handle:  can't see the data of post which posted by a user who is not a connection of current user;
+    const postedById = post.postedBy;
+    const currUserId = req.user._id;
+
+    const connection = await ConnectionRequestModel.findOne({
+      $or: [
+        { toUserId: currUserId, fromUserId: postedById, status: "accepted" },
+        { toUserId: postedById, fromUserId: currUserId, status: "accepted" },
+      ],
+    });
+
+    if (!connection)
+      throw { status: 400, message: "not allowed to see private posts." };
 
     const pipeline = [
       {
