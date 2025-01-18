@@ -12,7 +12,8 @@ const User = require("../models/user.js");
 
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
-    const user = req.user;
+    let user = req.user;
+    user=await User.findById(user._id).populate("posts");
 
     res.json({
       result: "success",
