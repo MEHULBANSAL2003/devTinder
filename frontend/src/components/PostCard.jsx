@@ -3,44 +3,74 @@ import { CiHeart } from "react-icons/ci";
 import { FaHeart, FaRegComment } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const PostCard = ({ post }) => {
-  const { postedBy, imageUrl, createdAt,likedBy } = post;
+  const userData = useSelector((store) => store.user);
+  const [isLiked, setIsLiked] = useState(false);
+  
+
+  const { postedBy, imageUrl, createdAt, likedBy } = post;
+  const [likeCount, setLikeCount] = useState(likedBy.length);
   const formattedDate = formatDistanceToNow(new Date(createdAt), {
     addSuffix: true,
   });
   const navigate = useNavigate();
-  const [isLiked,setIsLiked]=useState(false);
 
   const handleViewProfile = () => {
     navigate(`/profile/${postedBy._id}`);
   };
 
-  
-  useEffect(()=>{
-     if(likedBy.includes(postedBy._id)){
-      
+  useEffect(() => {
+    if (likedBy.includes(userData._id)) {
       setIsLiked(true);
-     }
-     else{
+    } else {
       setIsLiked(false);
-     }
-  },[]);
+    }
+  }, []);
 
+  const handleLike = async () => {
+    try {
+      if (!isLiked) {
+        const url = `${import.meta.env.VITE_BACKEND_URL}/post/like/${post._id}`;
+        const response = await axios({
+          method: "post",
+          url: url,
+          data: {
+            userId: userData._id,
+          },
+          withCredentials: true,
+        });
 
-  const handleLike=()=>{
-  
-   if(!isLiked){
-      
+        if (response.data.result === "success") {
+          console.log(response);
+          setIsLiked(true);
+          setLikeCount(likeCount + 1);
+        }
+      } else {
+        const url = `${import.meta.env.VITE_BACKEND_URL}/post/dislike/${
+          post._id
+        }`;
+        const response = await axios({
+          method: "post",
+          url: url,
+          data: {
+            userId: userData._id,
+          },
+          withCredentials: true,
+        });
 
-   }
-   else{
-
-   }
-  
-
-  }
+        if (response.data.result === "success") {
+          console.log(response);
+          setIsLiked(false);
+          setLikeCount(likeCount - 1);
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="my-8 bg-gray-900 text-white max-w-2xl mx-auto rounded-lg shadow-lg overflow-hidden">
@@ -76,11 +106,21 @@ const PostCard = ({ post }) => {
         <div className="items-center justify-between text-white">
           <div className="flex items-center space-x-6">
             <div className="flex items-center space-x-3">
-             {!isLiked? <CiHeart size={40} onClick={handleLike} className="hover:cursor-pointer" />:<FaHeart size={40} onClick={handleLike} className="hover:cursor-pointer" />}
-              {post.likedBy.length > 0 && (
-                <span className="text-lg text-white">
-                  {post.likedBy.length}
-                </span>
+              {!isLiked ? (
+                <CiHeart
+                  size={40}
+                  onClick={handleLike}
+                  className="hover:cursor-pointer"
+                />
+              ) : (
+                <FaHeart
+                  size={40}
+                  onClick={handleLike}
+                  className="hover:cursor-pointer"
+                />
+              )}
+              {likeCount > 0 && (
+                <span className="text-lg text-white">{likeCount}</span>
               )}
             </div>
 

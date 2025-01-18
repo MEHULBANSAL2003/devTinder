@@ -118,8 +118,8 @@ postRouter.post("/post/:status/:postId", userAuth, async (req, res) => {
   try {
     const postId = req.params.postId;
     const status = req.params.status;
+    const currUser = req.user;
     const allowedStatus = ["like", "dislike"];
-
     if (!allowedStatus.includes(status)) {
       throw { status: 400, message: `invalid status type: ${status}` };
     }
@@ -128,8 +128,8 @@ postRouter.post("/post/:status/:postId", userAuth, async (req, res) => {
     if (!post) throw { status: 400, message: "no such posts exists" };
 
     const { userId } = req.body;
-    const user = await User.findById(userId);
-    if (!user) throw { statau: 400, message: "user doesn't exists" };
+    if (userId !== currUser._id.toString())
+      throw { status: 400, message: "user doesn't exists" };
 
     if (status === "like") {
       if (post.likedBy.some((id) => id.toString() === userId)) {
@@ -138,7 +138,7 @@ postRouter.post("/post/:status/:postId", userAuth, async (req, res) => {
       post.likedBy.push(userId);
       await post.save();
     } else {
-      if (!post.likedBy.includes(userId))
+      if (!post.likedBy.includes(userId.toString()))
         throw { status: 400, message: "already not liked by you" };
 
       post.likedBy = post.likedBy.filter((id) => id.toString() !== userId);
@@ -148,6 +148,7 @@ postRouter.post("/post/:status/:postId", userAuth, async (req, res) => {
     res.status(200).json({
       result: "success",
       message: `post ${status} succesfully`,
+      data: post,
     });
   } catch (err) {
     res.status(err.status || 500).json({

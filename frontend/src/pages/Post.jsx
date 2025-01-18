@@ -21,7 +21,6 @@ const Post = () => {
       if (response?.data?.result === "success") {
         setPosts(response?.data?.data);
       }
-  
     } catch (err) {
       setError(err?.response?.data?.message);
     } finally {
@@ -58,12 +57,13 @@ const Post = () => {
           </div>
         )}
       </div>
-      {posts.length>0 &&<div className="flex justify-center mt-12 py-4  border-t border-gray-800 text-slate-200 text-md">
-        <span className="font-medium ">
-          You have reached the end of the posts..!!
-        </span>
-      </div>
-}
+      {posts.length > 0 && (
+        <div className="flex justify-center mt-12 py-4  border-t border-gray-800 text-slate-200 text-md">
+          <span className="font-medium ">
+            You have reached the end of the posts..!!
+          </span>
+        </div>
+      )}
     </div>
   );
 };
