@@ -1,19 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CiHeart } from "react-icons/ci";
 import { FaHeart, FaRegComment } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
+
 const PostCard = ({ post }) => {
-  const { postedBy, imageUrl, createdAt } = post;
+  const { postedBy, imageUrl, createdAt,likedBy } = post;
   const formattedDate = formatDistanceToNow(new Date(createdAt), {
     addSuffix: true,
   });
   const navigate = useNavigate();
+  const [isLiked,setIsLiked]=useState(false);
 
   const handleViewProfile = () => {
     navigate(`/profile/${postedBy._id}`);
   };
+
+  
+  useEffect(()=>{
+     if(likedBy.includes(postedBy._id)){
+      
+      setIsLiked(true);
+     }
+     else{
+      setIsLiked(false);
+     }
+  },[]);
+
+
+  const handleLike=()=>{
+  
+   if(!isLiked){
+      
+
+   }
+   else{
+
+   }
+  
+
+  }
 
   return (
     <div className="my-8 bg-gray-900 text-white max-w-2xl mx-auto rounded-lg shadow-lg overflow-hidden">
@@ -48,10 +75,10 @@ const PostCard = ({ post }) => {
       <div className="p-6">
         <div className="items-center justify-between text-white">
           <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-2">
-              <CiHeart size={40} />
+            <div className="flex items-center space-x-3">
+             {!isLiked? <CiHeart size={40} onClick={handleLike} className="hover:cursor-pointer" />:<FaHeart size={40} onClick={handleLike} className="hover:cursor-pointer" />}
               {post.likedBy.length > 0 && (
-                <span className="text-sm text-gray-400">
+                <span className="text-lg text-white">
                   {post.likedBy.length}
                 </span>
               )}

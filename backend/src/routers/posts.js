@@ -1,6 +1,7 @@
 const express = require("express");
 const { userAuth } = require("../middlewares/auth");
 const Post = require("../models/post");
+const User = require("../models/user");
 const postRouter = express.Router();
 
 postRouter.post("/post/createpost", userAuth, async (req, res) => {
@@ -18,12 +19,10 @@ postRouter.post("/post/createpost", userAuth, async (req, res) => {
     if (content) data.content = content;
 
     const post = new Post(data);
-   await post.save();
-    
+    await post.save();
 
-   currUser.posts.push(post._id);
-   await currUser.save();
-    
+    currUser.posts.push(post._id);
+    await currUser.save();
 
     res.status(200).json({
       result: "success",
@@ -31,7 +30,6 @@ postRouter.post("/post/createpost", userAuth, async (req, res) => {
       data: post,
     });
   } catch (err) {
-   
     res.status(err.status || 500).json({
       result: "error",
       message: err.message || "Internal server error",
@@ -91,26 +89,65 @@ postRouter.get("/posts", userAuth, async (req, res) => {
           imageUrl: 1,
           content: 1,
           createdAt: 1,
-          likedBy:1,
-          replies:1,
+          likedBy: 1,
+          replies: 1,
           "postedBy.firstName": 1,
           "postedBy.lastName": 1,
           "postedBy.userName": 1,
-          "postedBy.photoUrl":1,
-          "postedBy._id":1
-
+          "postedBy.photoUrl": 1,
+          "postedBy._id": 1,
         },
       },
     ];
     const posts = await Post.aggregate(pipeline);
 
-    
-  
-
     res.status(200).json({
       result: "success",
       message: "all posts fetched successfully",
       data: posts,
+    });
+  } catch (err) {
+    res.status(err.status || 500).json({
+      result: "error",
+      message: err.message || "Internal server error",
+    });
+  }
+});
+
+postRouter.post("/post/:status/:postId", userAuth, async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const status = req.params.status;
+    const allowedStatus = ["like", "dislike"];
+
+    if (!allowedStatus.includes(status)) {
+      throw { status: 400, message: `invalid status type: ${status}` };
+    }
+
+    let post = await Post.findById(postId);
+    if (!post) throw { status: 400, message: "no such posts exists" };
+
+    const { userId } = req.body;
+    const user = await User.findById(userId);
+    if (!user) throw { statau: 400, message: "user doesn't exists" };
+
+    if (status === "like") {
+      if (post.likedBy.some((id) => id.toString() === userId)) {
+        throw { status: 400, message: "Already liked by you" };
+      }
+      post.likedBy.push(userId);
+      await post.save();
+    } else {
+      if (!post.likedBy.includes(userId))
+        throw { status: 400, message: "already not liked by you" };
+
+      post.likedBy = post.likedBy.filter((id) => id.toString() !== userId);
+      await post.save();
+    }
+
+    res.status(200).json({
+      result: "success",
+      message: `post ${status} succesfully`,
     });
   } catch (err) {
     res.status(err.status || 500).json({
