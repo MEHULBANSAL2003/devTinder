@@ -41,8 +41,8 @@ const Post = () => {
   }
 
   return (
-    <div className="bg-gray-800 min-h-screen py-2 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
+    <div className="bg-gray-800 min-h-screen py-2 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
         {posts && posts.length > 0 ? (
           posts.map((post) => <PostCard key={post._id} post={post} />)
         ) : (
