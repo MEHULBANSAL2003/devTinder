@@ -229,4 +229,25 @@ postRouter.get("/post/:postId", userAuth, async (req, res) => {
   }
 });
 
+
+postRouter.get("/post/likes/:postId",userAuth,async(req,res)=>{
+  try{
+
+    const postId=req.params.postId;
+    const objectId = new mongoose.Types.ObjectId(postId);
+    const post = await Post.findById(postId);
+    if (!post) throw { status: 400, message: "no such posts exists" };
+
+  
+
+
+  }
+  catch (err) {
+    res.status(err.status || 500).json({
+      result: "error",
+      message: err.message || "Internal server error",
+    });
+  }
+});
+
 module.exports = { postRouter };
