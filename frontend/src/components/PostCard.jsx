@@ -2,24 +2,33 @@ import React from "react";
 import { CiHeart } from "react-icons/ci";
 import { FaHeart, FaRegComment } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const PostCard = ({ post }) => {
   const { postedBy, imageUrl, createdAt } = post;
   const formattedDate = formatDistanceToNow(new Date(createdAt), {
     addSuffix: true,
   });
-  
+  const navigate = useNavigate();
+
+  const handleViewProfile = () => {
+    navigate(`/profile/${postedBy._id}`);
+  };
 
   return (
     <div className="my-8 bg-gray-900 text-white max-w-2xl mx-auto rounded-lg shadow-lg overflow-hidden">
       <div className="flex items-center p-3 border-b border-gray-700">
         <img
+          onClick={handleViewProfile}
           src={postedBy?.photoUrl}
           alt={`${postedBy.firstName} ${postedBy.lastName}`}
-          className="w-14 h-14 rounded-full border border-gray-700"
+          className="w-14 h-14 rounded-full border border-gray-700 hover:cursor-pointer"
         />
         <div className="ml-6">
-          <h4 className="font-semibold text-xl">
+          <h4
+            className="font-semibold text-xl hover:cursor-pointer hover:text-slate-300"
+            onClick={handleViewProfile}
+          >
             {postedBy.firstName} {postedBy.lastName}
           </h4>
           <p className="text-sm text-slate-200">@{postedBy.userName}</p>

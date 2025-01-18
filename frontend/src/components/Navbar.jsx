@@ -5,7 +5,7 @@ import { removeUser, addUser } from "../redux/userSlice";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { IoIosNotifications } from "react-icons/io";
-import { IoLogIn } from "react-icons/io5";
+import { IoLogIn, IoPeople } from "react-icons/io5";
 
 const Navbar = () => {
   const user = useSelector((store) => store.user);
@@ -54,9 +54,17 @@ const Navbar = () => {
       )}
       {user && (
         <div className="flex-none gap-2">
+          <Link to="/feed">
+            {" "}
+            <div className="mx-1 cursor-pointer">
+              {" "}
+              <IoPeople size={30} />
+            </div>{" "}
+          </Link>
+
           <Link to="/requests">
             {" "}
-            <div className="mx-5 cursor-pointer">
+            <div className="mx-2 cursor-pointer">
               {" "}
               <IoIosNotifications size={30} />
             </div>{" "}

@@ -32,8 +32,9 @@ const Signup = () => {
     setImage(file);
     setLoading(true);
     try {
-      const filename = encodeURIComponent(file.name);
+      let filename = encodeURIComponent(file.name);
       const contentType = file.type;
+      filename = filename.replace(/[^\w.]/g, "");
 
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/generate-upload-url`,
