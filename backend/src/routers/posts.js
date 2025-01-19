@@ -238,9 +238,6 @@ postRouter.get("/post/likes/:postId",userAuth,async(req,res)=>{
     const post = await Post.findById(postId);
     if (!post) throw { status: 400, message: "no such posts exists" };
 
-  
-
-
   }
   catch (err) {
     res.status(err.status || 500).json({
