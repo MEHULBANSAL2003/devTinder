@@ -10,10 +10,14 @@ postRouter.post("/post/create", userAuth, async (req, res) => {
   const currUser = req.user;
   const { imageUrl, content } = req.body;
 
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     if (!imageUrl) {
       throw { status: 400, message: "Image is required" };
     }
+
     const data = {
       imageUrl: imageUrl,
       postedBy: currUser._id,
@@ -21,17 +25,23 @@ postRouter.post("/post/create", userAuth, async (req, res) => {
     if (content) data.content = content;
 
     const post = new Post(data);
-    await post.save();
+    await post.save({ session });
 
     currUser.posts.push(post._id);
-    await currUser.save();
+    await currUser.save({ session });
+
+    await session.commitTransaction();
+    session.endSession();
 
     res.status(200).json({
       result: "success",
-      message: "posted successfully",
+      message: "Posted successfully",
       data: post,
     });
   } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+
     res.status(err.status || 500).json({
       result: "error",
       message: err.message || "Internal server error",
@@ -40,24 +50,40 @@ postRouter.post("/post/create", userAuth, async (req, res) => {
 });
 
 postRouter.post("/post/delete/:postId", userAuth, async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
   try {
     const currUser = req.user;
     const postId = req.params.postId;
+    const post = await Post.findById(postId).session(session);
+    if (!post) {
+      throw { status: 400, message: "No post exists" };
+    }
+    if (post.postedBy.toString() !== currUser._id.toString()) {
+      throw { status: 400, message: "You are not the owner of this post" };
+    }
+    currUser.posts = currUser.posts.filter(
+      (post) => post.toString() !== postId.toString()
+    );
+    const response = await currUser.save({ session });
+    if (!response)
+      throw { status: 400, message: "failed to update changes to user" };
 
-    const post = await Post.findById(postId);
-
-    if (!post) throw { status: 400, message: "no post exists" };
-    if (post.postedBy.toString() !== currUser._id.toString())
-      throw { status: 400, message: "you are not owner of this post" };
-
-    const response = await Post.findByIdAndDelete(postId);
-
+    const deletedPost = await Post.findByIdAndDelete(postId).session(session);
+    if (!deletedPost) {
+      throw { status: 500, message: "Failed to delete the post from database" };
+    }
+    await session.commitTransaction();
+    session.endSession();
     res.status(200).json({
       result: "success",
-      message: "post deleted successfully",
-      data: response,
+      message: "Post deleted successfully",
+      data: deletedPost,
     });
   } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+
     res.status(err.status || 500).json({
       result: "error",
       message: err.message || "Internal server error",
@@ -177,7 +203,7 @@ postRouter.get("/post/:postId", userAuth, async (req, res) => {
       ],
     });
 
-    if (!connection && postedById.toString()!==currUserId.toString())
+    if (!connection && postedById.toString() !== currUserId.toString())
       throw { status: 400, message: "not allowed to see private posts." };
 
     const pipeline = [
@@ -229,15 +255,12 @@ postRouter.get("/post/:postId", userAuth, async (req, res) => {
   }
 });
 
-
-postRouter.get("/post/likes/:postId",userAuth,async(req,res)=>{
-  try{
-
-    const postId=req.params.postId;
+postRouter.get("/post/likes/:postId", userAuth, async (req, res) => {
+  try {
+    const postId = req.params.postId;
     const objectId = new mongoose.Types.ObjectId(postId);
     let post = await Post.findById(postId);
     if (!post) throw { status: 400, message: "no such posts exists" };
-
 
     // const postedById = post.postedBy;
     // const currUserId = req.user._id;
@@ -251,45 +274,43 @@ postRouter.get("/post/likes/:postId",userAuth,async(req,res)=>{
 
     // if (!connection)
     //   throw { status: 400, message: "not allowed to see private posts." };
-    
 
-    const pipeline=[{
-      $unwind:"$likedBy"
-    },
-    {$lookup:{
-      from:"users",
-      localField:"likedBy",
-      foreignField:"_id",
-      as:"userData"
-    }
-    },
-    {$project:{
-      _id:0,
-      "userData.firstName":1,
-      "userData.lastName":1,
-      "userData.photoUrl":1,
-      "userData.userName":1,
-      "userData._id":1
-
-    }}
-  ]
-    post=await Post.aggregate(pipeline);
-
+    const pipeline = [
+      {
+        $unwind: "$likedBy",
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "likedBy",
+          foreignField: "_id",
+          as: "userData",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          "userData.firstName": 1,
+          "userData.lastName": 1,
+          "userData.photoUrl": 1,
+          "userData.userName": 1,
+          "userData._id": 1,
+        },
+      },
+    ];
+    post = await Post.aggregate(pipeline);
 
     res.status(200).json({
-      result:"success",
-      message:"all likes fetched successfully",
-      data:post,
-    })
-  }
-  catch (err) {
+      result: "success",
+      message: "all likes fetched successfully",
+      data: post,
+    });
+  } catch (err) {
     res.status(err.status || 500).json({
       result: "error",
       message: err.message || "Internal server error",
     });
   }
 });
-
-
 
 module.exports = { postRouter };

@@ -6,7 +6,6 @@ const connectDB = async () => {
     minPoolSize:5,
     maxPoolSize:20,
     maxIdleTimeMS:30000,
-    readPreference:"secondary",
     waitQueueTimeoutMS:5000
   });
 };
