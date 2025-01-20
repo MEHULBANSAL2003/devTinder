@@ -46,8 +46,10 @@ const Post = () => {
         {posts && posts.length > 0 ? (
           posts.map((post) => <PostCard key={post._id} post={post} />)
         ) : (
+          
           <div className="text-center text-white text-2xl">
             No posts available!
+            
           </div>
         )}
 

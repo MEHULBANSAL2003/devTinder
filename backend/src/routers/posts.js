@@ -6,7 +6,7 @@ const postRouter = express.Router();
 const mongoose = require("mongoose");
 const ConnectionRequestModel = require("../models/connectionRequests");
 
-postRouter.post("/post/createpost", userAuth, async (req, res) => {
+postRouter.post("/post/create", userAuth, async (req, res) => {
   const currUser = req.user;
   const { imageUrl, content } = req.body;
 
@@ -39,7 +39,7 @@ postRouter.post("/post/createpost", userAuth, async (req, res) => {
   }
 });
 
-postRouter.post("/post/deletepost/:postId", userAuth, async (req, res) => {
+postRouter.post("/post/delete/:postId", userAuth, async (req, res) => {
   try {
     const currUser = req.user;
     const postId = req.params.postId;
