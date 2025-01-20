@@ -235,9 +235,52 @@ postRouter.get("/post/likes/:postId",userAuth,async(req,res)=>{
 
     const postId=req.params.postId;
     const objectId = new mongoose.Types.ObjectId(postId);
-    const post = await Post.findById(postId);
+    let post = await Post.findById(postId);
     if (!post) throw { status: 400, message: "no such posts exists" };
 
+
+    // const postedById = post.postedBy;
+    // const currUserId = req.user._id;
+
+    // const connection = await ConnectionRequestModel.findOne({
+    //   $or: [
+    //     { toUserId: currUserId, fromUserId: postedById, status: "accepted" },
+    //     { toUserId: postedById, fromUserId: currUserId, status: "accepted" },
+    //   ],
+    // });
+
+    // if (!connection)
+    //   throw { status: 400, message: "not allowed to see private posts." };
+    
+
+    const pipeline=[{
+      $unwind:"$likedBy"
+    },
+    {$lookup:{
+      from:"users",
+      localField:"likedBy",
+      foreignField:"_id",
+      as:"userData"
+    }
+    },
+    {$project:{
+      _id:0,
+      "userData.firstName":1,
+      "userData.lastName":1,
+      "userData.photoUrl":1,
+      "userData.userName":1,
+      "userData._id":1
+
+    }}
+  ]
+    post=await Post.aggregate(pipeline);
+
+
+    res.status(200).json({
+      result:"success",
+      message:"all likes fetched successfully",
+      data:post,
+    })
   }
   catch (err) {
     res.status(err.status || 500).json({
@@ -246,5 +289,7 @@ postRouter.get("/post/likes/:postId",userAuth,async(req,res)=>{
     });
   }
 });
+
+
 
 module.exports = { postRouter };
