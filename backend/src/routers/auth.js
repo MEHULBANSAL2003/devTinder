@@ -6,7 +6,7 @@ const {
   validateSignUpData,
   validateLoginData,
 } = require("../utils/validation.js");
-const { putObjectInS3,deleteObjectFromS3 } = require("../utils/s3.js");
+const { putObjectInS3, deleteObjectFromS3 } = require("../utils/s3.js");
 const { userAuth } = require("../middlewares/auth.js");
 
 authRouter.post("/signup", async (req, res) => {
@@ -25,21 +25,20 @@ authRouter.post("/signup", async (req, res) => {
 
     const registeredUser = await User.find({ emailId: emailId });
     if (registeredUser.length > 0) {
-      throw {status:400,message:"User already exists. Login to access"}
+      throw { status: 400, message: "User already exists. Login to access" };
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    let data=
-    {
+    let data = {
       firstName,
-      lastName, 
+      lastName,
       userName,
       gender,
       age,
       emailId,
       password: hashedPassword,
-    }
-    if(imageUrl) data.photoUrl=imageUrl;
+    };
+    if (imageUrl) data.photoUrl = imageUrl;
 
     const user = new User(data);
     await user.save();
@@ -56,9 +55,9 @@ authRouter.post("/signup", async (req, res) => {
       data: user,
     });
   } catch (err) {
-    res.status(err.status||500).json({
+    res.status(err.status || 500).json({
       result: "error",
-      message: err.message||"Internal server error",
+      message: err.message || "Internal server error",
     });
   }
 });
@@ -73,8 +72,6 @@ authRouter.post("/login", async (req, res) => {
       throw { status: 400, message: "User not registered. Sign up first" };
     }
 
- 
-
     const isPasswordValid = await user.validatePassword(password);
     if (isPasswordValid) {
       const token = await user.getJWT();
@@ -87,12 +84,12 @@ authRouter.post("/login", async (req, res) => {
         data: user,
       });
     } else {
-      throw {status:400,message:"Incorrect Password"};
+      throw { status: 400, message: "Incorrect Password" };
     }
   } catch (err) {
-    res.status(err.status||500).json({
+    res.status(err.status || 500).json({
       result: "error",
-      message: err.message||"Internal server error",
+      message: err.message || "Internal server error",
     });
   }
 });
@@ -106,9 +103,9 @@ authRouter.post("/logout", async (req, res) => {
       message: "logged out sucessfully",
     });
   } catch (err) {
-    res.status(err.status||500).json({
+    res.status(err.status || 500).json({
       result: "error",
-      message: err.message||"Internal server error",
+      message: err.message || "Internal server error",
     });
   }
 });
@@ -122,57 +119,52 @@ authRouter.post("/generate-upload-url", async (req, res) => {
       .json({ result: "error", message: "Missing filename or content-type." });
   }
 
-  try{
-  const response = await putObjectInS3(filename, contentType);
-  if (response.result === "success") {
-    res.status(response.status).json(response);
-  } else {
-    res.status(response.status).json(response.message);
+  try {
+    const response = await putObjectInS3(filename, contentType);
+    if (response.result === "success") {
+      res.status(response.status).json(response);
+    } else {
+      res.status(response.status).json(response.message);
+    }
+  } catch (err) {
+    res.status(err.status || 500).json({
+      result: "error",
+      message: err.message || "Internal server error",
+    });
   }
-}
-catch(err){
-  res.status(err.status||500).json({
-    result: "error",
-    message: err.message||"Internal server error",
-  });
-}
 });
 
-authRouter.post("/deleteS3image",userAuth,async(req,res)=>{
+authRouter.post("/deleteS3image", userAuth, async (req, res) => {
   const { imageKey } = req.body;
 
   if (!imageKey) {
     return res.status(400).json({
-      result:"error",
+      result: "error",
       message: "Image key is required",
     });
-  };
+  }
 
   try {
-    
     const response = await deleteObjectFromS3(imageKey);
 
-    if (response.result==="success") {
+    if (response.result === "success") {
       return res.status(200).json({
-         result:"success",
+        result: "success",
         message: response.message,
       });
     } else {
-      return res.status(500).json({
-        result:"error",
+      return res.status(400).json({
+        result: "error",
         message: response.message || "Failed to delete image from S3",
       });
     }
   } catch (err) {
     console.error("Error in deleting image:", err);
     return res.status(500).json({
-      result:"error",
+      result: "error",
       message: "An error occurred while deleting the image",
     });
   }
-
-
-
-})
+});
 
 module.exports = { authRouter };

@@ -104,8 +104,7 @@ const Navbar = () => {
         }
       }
     } catch (err) {
-      console.log(err);
-      toast.error(err?.response?.data?.message||"something went wrong");
+      toast.error(err?.response?.data?.message || "something went wrong");
     } finally {
       setLoading(false);
     }
@@ -170,7 +169,6 @@ const Navbar = () => {
               <li>
                 <Link to="/profile" className="justify-between">
                   Profile
-                  
                 </Link>
               </li>
               <li>

@@ -107,9 +107,9 @@ const Profile = () => {
     setIsUpdateModalOpen(false);
   };
 
-  const handleViewConnections=()=>{
-     navigate("/connections");
-  }
+  const handleViewConnections = () => {
+    navigate("/connections");
+  };
 
   const handleFileChange = (e) => {
     setError(null);
@@ -124,6 +124,25 @@ const Profile = () => {
 
     setLoading(true);
     try {
+      const oldImageUrl = user.photoUrl;
+      let oldKey;
+      if (oldImageUrl.startsWith("https://d2wg4x3zsy66t1.cloudfront.net")) {
+        oldKey = oldImageUrl.split("cloudfront.net/")[1];
+
+        const deletedImage = await axios({
+          method: "post",
+          url: `${import.meta.env.VITE_BACKEND_URL}/deleteS3image`,
+          data: {
+            imageKey: oldKey,
+          },
+          withCredentials: true,
+        });
+        if (!deletedImage)
+          throw {
+            status: 400,
+            message: "some error occured in deleting image",
+          };
+      }
       const filename = encodeURIComponent(newProfilePic.name);
       const contentType = newProfilePic.type;
       const response = await axios.post(
@@ -163,7 +182,7 @@ const Profile = () => {
         }
       }
     } catch (err) {
-      toast.error(err?.response?.data?.message||"something went wrong");
+      toast.error(err?.response?.data?.message || "something went wrong");
     } finally {
       setLoading(false);
     }
@@ -172,7 +191,6 @@ const Profile = () => {
   if (loading) {
     return <Loader />;
   }
-  console.log(user);
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-r from-blue-100 to-indigo-200 p-6">
@@ -236,8 +254,12 @@ const Profile = () => {
                   <p>{user.gender || "Not available"}</p>
                 </div>
                 <div onClick={handleViewConnections}>
-                  <p className="font-semibold text-black hover:cursor-pointer">Connections</p>
-                  <p className="mx-7 hover:cursor-pointer">{user.connections}</p>
+                  <p className="font-semibold text-black hover:cursor-pointer">
+                    Connections
+                  </p>
+                  <p className="mx-7 hover:cursor-pointer">
+                    {user.connections}
+                  </p>
                 </div>
               </div>
             </div>
