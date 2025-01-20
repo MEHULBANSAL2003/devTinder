@@ -107,6 +107,10 @@ const Profile = () => {
     setIsUpdateModalOpen(false);
   };
 
+  const handleViewConnections=()=>{
+     navigate("/connections");
+  }
+
   const handleFileChange = (e) => {
     setError(null);
     setNewProfilePic(e.target.files[0]);
@@ -168,6 +172,7 @@ const Profile = () => {
   if (loading) {
     return <Loader />;
   }
+  console.log(user);
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-r from-blue-100 to-indigo-200 p-6">
@@ -229,6 +234,10 @@ const Profile = () => {
                 <div>
                   <p className="font-semibold">Gender</p>
                   <p>{user.gender || "Not available"}</p>
+                </div>
+                <div onClick={handleViewConnections}>
+                  <p className="font-semibold text-black hover:cursor-pointer">Connections</p>
+                  <p className="mx-7 hover:cursor-pointer">{user.connections}</p>
                 </div>
               </div>
             </div>
