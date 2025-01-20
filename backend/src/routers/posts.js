@@ -177,7 +177,7 @@ postRouter.get("/post/:postId", userAuth, async (req, res) => {
       ],
     });
 
-    if (!connection)
+    if (!connection && postedById.toString()!==currUserId.toString())
       throw { status: 400, message: "not allowed to see private posts." };
 
     const pipeline = [
