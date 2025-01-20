@@ -262,18 +262,18 @@ postRouter.get("/post/likes/:postId", userAuth, async (req, res) => {
     let post = await Post.findById(postId);
     if (!post) throw { status: 400, message: "no such posts exists" };
 
-    // const postedById = post.postedBy;
-    // const currUserId = req.user._id;
+    const postedById = post.postedBy;
+    const currUserId = req.user._id;
 
-    // const connection = await ConnectionRequestModel.findOne({
-    //   $or: [
-    //     { toUserId: currUserId, fromUserId: postedById, status: "accepted" },
-    //     { toUserId: postedById, fromUserId: currUserId, status: "accepted" },
-    //   ],
-    // });
+    const connection = await ConnectionRequestModel.findOne({
+      $or: [
+        { toUserId: currUserId, fromUserId: postedById, status: "accepted" },
+        { toUserId: postedById, fromUserId: currUserId, status: "accepted" },
+      ],
+    });
 
-    // if (!connection)
-    //   throw { status: 400, message: "not allowed to see private posts." };
+    if (!connection)
+      throw { status: 400, message: "not allowed to see private posts." };
 
     const pipeline = [
       {
