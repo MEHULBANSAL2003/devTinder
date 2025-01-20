@@ -82,6 +82,10 @@ const userSchema = new Schema(
         ref: "Reply",
       },
     ],
+    connections:{
+      type:Number,
+      default:0
+    }
   
   },
   { timestamps: true }
