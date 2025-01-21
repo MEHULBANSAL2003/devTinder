@@ -244,15 +244,12 @@ const Profile = () => {
               <p className="text-gray-500 text-lg">{user.userName}</p>
               <p className="mt-4 text-gray-700">{user.about}</p>
 
-              <div className="mt-4 flex gap-6 text-lg text-gray-600">
+              <div className="mt-4 flex gap-6 text-lg text-black">
                 <div>
-                  <p className="font-semibold">Age</p>
-                  <p>{user.age || "Not available"}</p>
+                  <p className="font-semibold ">Posts</p>
+                  <p>{user.posts.length}</p>
                 </div>
-                <div>
-                  <p className="font-semibold">Gender</p>
-                  <p>{user.gender || "Not available"}</p>
-                </div>
+                
                 <div onClick={handleViewConnections}>
                   <p className="font-semibold text-black hover:cursor-pointer">
                     Connections
