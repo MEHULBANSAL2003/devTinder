@@ -205,7 +205,7 @@ const Profile = () => {
           </button>
 
           <div className="flex flex-col md:flex-row items-center gap-8">
-            {/* Profile Picture */}
+  
             <div className="relative group">
               <img
                 src={user.photoUrl}
@@ -236,7 +236,7 @@ const Profile = () => {
               )}
             </div>
 
-            {/* Profile Details */}
+    
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
               <h1 className="text-3xl font-bold text-gray-800">
                 {user.firstName} {user.lastName}
@@ -330,7 +330,6 @@ const Profile = () => {
         </div>
       )}
 
-      {/* Posts Section */}
       <div className="w-full max-w-6xl mt-8">
         <h2 className="text-center text-2xl font-bold text-black mb-6">
           Posts
