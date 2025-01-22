@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { IoMdMore } from "react-icons/io";
+import Loader from "./Loader";
+import { toast } from "react-toastify";
 
 const PostCard = ({ post, closeButton, deleteOption }) => {
   const userData = useSelector((store) => store.user);
@@ -13,6 +15,7 @@ const PostCard = ({ post, closeButton, deleteOption }) => {
   const [error, setError] = useState(null);
   const [showDropDown, setShowDropDown] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [loading,setLoading]=useState(false);
 
   const { postedBy, imageUrl, createdAt, likedBy } = post;
   const [likeCount, setLikeCount] = useState(likedBy.length);
@@ -57,10 +60,50 @@ const PostCard = ({ post, closeButton, deleteOption }) => {
     setShowDeleteModal(false);
     setShowDropDown(false);
   }
+  
+    const handleDelete=async()=>{
+      try{
+        setLoading(true);
+        let oldKey;
+        if (imageUrl.startsWith("https://d2wg4x3zsy66t1.cloudfront.net")) {
+          oldKey = imageUrl.split("cloudfront.net/")[1];
+          const deletedImage = await axios({
+            method: "post",
+            url: `${import.meta.env.VITE_BACKEND_URL}/deleteS3image`,
+            data: {
+              imageKey: oldKey,
+            },
+            withCredentials: true,
+          });
+          if (!deletedImage)
+            throw {
+              status: 400,
+              message: "some error occured in deleting image",
+            };
+      }
 
-  const handleDelete=()=>{
-    
-  }
+      const url=`${import.meta.env.VITE_BACKEND_URL}/post/delete/${post._id}`;
+
+      const response=await axios({
+        method:"post",
+        url:url,
+        withCredentials:true
+      });
+      if(response.data.result==="success"){
+        toast.success(response.data.message);
+        navigate("/profile");
+      }
+      }
+      catch(err){ 
+        toast.error(err?.response?.data?.message || "something went wrong");
+      }
+      finally{
+        setLoading(false);
+      }
+
+    }
+
+  if(loading) return <Loader/>
 
   return (
     <div className="relative my-8 bg-gray-900 text-white max-w-2xl mx-auto rounded-lg shadow-lg overflow-hidden">

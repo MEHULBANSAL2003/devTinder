@@ -76,6 +76,8 @@ const Navbar = () => {
         }
       );
 
+      console.log(response);  
+
       if (response.data.result === "success") {
         const signedUrl = response.data.url;
 
