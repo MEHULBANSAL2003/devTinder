@@ -92,7 +92,7 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
     connections.map((row) => {
       if (row.fromUserId.toString() === currUser._id.toString()) {
         notRequiredIds.push(row.toUserId);
-      } else {
+      } else {  
         notRequiredIds.push(row.fromUserId);
       }
     });
