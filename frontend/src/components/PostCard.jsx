@@ -52,9 +52,14 @@ const PostCard = ({ post, closeButton, deleteOption }) => {
   const handleDeleteOption = () => {
     setShowDeleteModal(true);
   };
+ 
   const handleCancelDelete=()=>{
-     setShowDeleteModal(false);
-     setShowDropDown(false);
+    setShowDeleteModal(false);
+    setShowDropDown(false);
+  }
+
+  const handleDelete=()=>{
+    
   }
 
   return (
@@ -89,7 +94,7 @@ const PostCard = ({ post, closeButton, deleteOption }) => {
             </p>
             <div className="flex justify-end space-x-4">
               <button
-               
+                onClick={handleDelete}
                 className="bg-red-600 px-4 py-2 rounded hover:bg-red-700 focus:outline-none"
               >
                 Delete
