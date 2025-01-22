@@ -5,11 +5,14 @@ import { formatDistanceToNow } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { IoMdMore } from "react-icons/io";
 
-const PostCard = ({ post, closeButton }) => {
+const PostCard = ({ post, closeButton, deleteOption }) => {
   const userData = useSelector((store) => store.user);
   const [isLiked, setIsLiked] = useState(false);
   const [error, setError] = useState(null);
+  const [showDropDown, setShowDropDown] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const { postedBy, imageUrl, createdAt, likedBy } = post;
   const [likeCount, setLikeCount] = useState(likedBy.length);
@@ -24,7 +27,9 @@ const PostCard = ({ post, closeButton }) => {
 
   const handleLike = async () => {
     try {
-      const url = `${import.meta.env.VITE_BACKEND_URL}/post/${isLiked ? "dislike" : "like"}/${post._id}`;
+      const url = `${import.meta.env.VITE_BACKEND_URL}/post/${
+        isLiked ? "dislike" : "like"
+      }/${post._id}`;
       const response = await axios({
         method: "post",
         url: url,
@@ -40,13 +45,69 @@ const PostCard = ({ post, closeButton }) => {
       setError(err?.response?.data?.message || "Something went wrong");
     }
   };
+  const handleMoreOption = () => {
+    setShowDropDown((prev) => !prev);
+  };
+
+  const handleDeleteOption = () => {
+    setShowDeleteModal(true);
+  };
+  const handleCancelDelete=()=>{
+     setShowDeleteModal(false);
+     setShowDropDown(false);
+  }
 
   return (
     <div className="relative my-8 bg-gray-900 text-white max-w-2xl mx-auto rounded-lg shadow-lg overflow-hidden">
+      {deleteOption && (
+        <button
+          onClick={handleMoreOption}
+          className="absolute top-4 right-10  text-white rounded-full p-2 hover:text-slate-400 focus:outline-none"
+        >
+          <IoMdMore size={25} />
+        </button>
+      )}
+
+      {showDropDown && (
+        <div className="absolute top-12 right-10 bg-gray-800 border border-gray-700 rounded-md shadow-lg text-sm">
+          <button
+            onClick={handleDeleteOption}
+            className="block px-4 py-2 text-left text-red-600 hover:bg-gray-700 w-full"
+          >
+            Delete Post
+          </button>
+        </div>
+      )}
+
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 text-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-lg font-bold mb-4">Are you sure?</h2>
+            <p className="mb-6">
+              Do you really want to delete this post? This action cannot be
+              undone.
+            </p>
+            <div className="flex justify-end space-x-4">
+              <button
+               
+                className="bg-red-600 px-4 py-2 rounded hover:bg-red-700 focus:outline-none"
+              >
+                Delete
+              </button>
+              <button
+                onClick={handleCancelDelete}
+                className="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700 focus:outline-none"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {closeButton && (
         <button
-          onClick={() => navigate(-1)} 
+          onClick={() => navigate(-1)}
           className="absolute top-4 right-4  text-white rounded-full p-2 hover:text-slate-400 focus:outline-none"
         >
           ✕

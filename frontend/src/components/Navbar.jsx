@@ -118,6 +118,7 @@ const Navbar = () => {
   };
 
   if (loading) return <Loader />;
+  console.log(user);
 
   return (
     <div className="navbar bg-base-300 relative">

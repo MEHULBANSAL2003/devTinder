@@ -38,7 +38,7 @@ const ViewPost = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-base-200">
-      {postData && <PostCard post={postData} closeButton />}
+      {postData && <PostCard post={postData} closeButton deleteOption />}
       {err && <div className="text-xl text-red-600">{err}</div>}
     </div>
   );
