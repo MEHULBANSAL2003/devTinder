@@ -248,7 +248,7 @@ postRouter.get("/post/:postId", userAuth, async (req, res) => {
           createdAt: 1,
           likedBy: 1,
           replies: 1,
-          "likedByDetails":1,
+          likedByDetails: 1,
           "postedBy.firstName": 1,
           "postedBy.lastName": 1,
           "postedBy.userName": 1,
