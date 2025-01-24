@@ -92,7 +92,7 @@ const ViewProfile = () => {
       </div>
     );
   }
-
+console.log(profile.connections);
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-100 to-indigo-200">
       <div className="max-w-4xl w-full bg-white rounded-lg shadow-xl p-8 relative">
@@ -117,6 +117,14 @@ const ViewProfile = () => {
               <div>
                 <p className="font-semibold">Gender</p>
                 <p>{profile.gender || "Not available"}</p>
+              </div>
+              <div>
+                <p className="font-semibold">Posts</p>
+                <p>{profile.posts.length}</p>
+              </div>
+              <div>
+                <p className="font-semibold">Connections</p>
+                <p>{profile.connections }</p>
               </div>
             </div>
           </div>
