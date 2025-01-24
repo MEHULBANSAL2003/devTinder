@@ -72,6 +72,8 @@ const ViewProfile = () => {
     handleViewProfile();
   }, []);
 
+  
+
   if (loading) {
     return <Loader />;
   }
@@ -94,9 +96,9 @@ const ViewProfile = () => {
   }
   console.log(profile);
   return (
-    <div>
-      <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-100 to-indigo-200">
-        <div className="max-w-4xl w-full bg-white rounded-lg shadow-xl p-8 relative">
+    
+      <div className=" justify-center items-center min-h-screen bg-gradient-to-r from-blue-100 to-indigo-200">
+        <div className="max-w-4xl mx-auto w-full bg-white rounded-lg shadow-xl p-8 relative">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <img
               src={profile.photoUrl}
@@ -148,8 +150,33 @@ const ViewProfile = () => {
             Member since: {new Date(profile.createdAt).toDateString()}
           </div>
         </div>
+         <div className="mt-8">
+          <div className="mb-4 flex justify-center text-2xl text-black font-bold">Posts</div>
+       
+          {profile && profile.posts.length>0 && 
+            (
+              <div className="mx-72 grid grid-cols-2 md:grid-cols-4 bg-gradient-to-r from-blue-100 to-indigo-200 p-4 rounded-lg shadow-lg">
+                {profile.posts.map((post) => (
+                  <div
+                    key={post._id}
+                    className="relative md:w-60 hover:cursor-pointer"
+                    onClick={() => handleImageClick(post)}
+                  >
+                    <img
+                      src={post.imageUrl}
+                      alt="Post"
+                      className="w-full h-60 object-cover rounded-lg shadow-md"
+                    />
+                  </div>
+                ))}
+              </div>
+            ) }
+          
+        
+        </div>
       </div>
-    </div>
+      
+    
   );
 };
 
