@@ -34,6 +34,8 @@ const ViewPost = () => {
     fetchPost();
   }, []);
 
+  console.log(postData);
+
   if (loading) return <Loader />;
 
   return (

@@ -15,9 +15,10 @@ const PostCard = ({ post, closeButton, deleteOption }) => {
   const [error, setError] = useState(null);
   const [showDropDown, setShowDropDown] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showLikedByModal, setShowLikedByModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { postedBy, imageUrl, createdAt, likedBy } = post;
+  const { postedBy, imageUrl, createdAt, likedBy, likedByDetails } = post;
   const [likeCount, setLikeCount] = useState(likedBy.length);
   const formattedDate = formatDistanceToNow(new Date(createdAt), {
     addSuffix: true,
@@ -27,6 +28,23 @@ const PostCard = ({ post, closeButton, deleteOption }) => {
   const handleViewProfile = () => {
     navigate(`/profile/${postedBy._id}`);
   };
+
+  const handleShowLikedBy = () => {
+    setShowLikedByModal(true);
+  };
+
+  const handleCloseLikedByModal = () => {
+    setShowLikedByModal(false);
+  };
+
+  useEffect(() => {
+    if (likedBy.includes(userData._id)) {
+      setIsLiked(true);
+    } else {
+      setIsLiked(false);
+    }
+  }, []);
+  console.log(likedByDetails);
 
   const handleLike = async () => {
     try {
@@ -100,10 +118,45 @@ const PostCard = ({ post, closeButton, deleteOption }) => {
     }
   };
 
+  console.log(post);
   if (loading) return <Loader />;
 
   return (
     <div className="relative my-8 bg-gray-900 text-white max-w-2xl mx-auto rounded-lg shadow-lg overflow-hidden">
+      {showLikedByModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-base-300 text-white p-6 rounded-lg shadow-lg w-96 relative">
+            <h2 className="text-lg font-bold mb-4">Liked By</h2>
+            <ul>
+              {post.likedByDetails.map((user) => (
+                <li
+                  key={user._id}
+                  className="py-2 border-b border-gray-700 flex justify-between"
+                >
+                  <div className="flex">
+                    <img
+                      className="h-10 w-10 btn-circle"
+                      src={user.photoUrl}
+                      alt=""
+                    />
+                    <p className="font-semibold mt-1 mx-4">
+                      {user.firstName} {user.lastName}
+                    </p>
+                  </div>
+                  <span className="text-slate-200">@{user.userName}</span>
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={handleCloseLikedByModal}
+              className="absolute top-4 right-4 text-white text-lg hover:text-gray-400"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+
       {deleteOption && userData._id.toString() === postedBy._id.toString() && (
         <button
           onClick={handleMoreOption}
@@ -217,6 +270,18 @@ const PostCard = ({ post, closeButton, deleteOption }) => {
               )}
             </div>
           </div>
+          {likedByDetails.length > 0 && (
+            <div
+              className="flex hover:cursor-pointer"
+              onClick={handleShowLikedBy}
+            >
+              <p className="font-semibold text-md mt-1">Liked By</p>
+              <p className="mx-3 mt-1 font-bold">
+                {likedByDetails[0].firstName + " " + likedByDetails[0].lastName}{" "}
+                and others
+              </p>
+            </div>
+          )}
           {post.content && (
             <div className="flex py-2">
               <h1 className="font-bold">{postedBy.userName}</h1>

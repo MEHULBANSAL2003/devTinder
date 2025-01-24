@@ -113,12 +113,21 @@ postRouter.get("/posts", userAuth, async (req, res) => {
         $unwind: "$postedBy",
       },
       {
+        $lookup: {
+          from: "users",
+          localField: "likedBy",
+          foreignField: "_id",
+          as: "likedByDetails",
+        },
+      },
+      {
         $project: {
           imageUrl: 1,
           content: 1,
           createdAt: 1,
           likedBy: 1,
           replies: 1,
+          likedByDetails: 1,
           "postedBy.firstName": 1,
           "postedBy.lastName": 1,
           "postedBy.userName": 1,
@@ -223,6 +232,14 @@ postRouter.get("/post/:postId", userAuth, async (req, res) => {
       {
         $unwind: "$postedBy",
       },
+      {
+        $lookup: {
+          from: "users",
+          localField: "likedBy",
+          foreignField: "_id",
+          as: "likedByDetails",
+        },
+      },
 
       {
         $project: {
@@ -231,6 +248,7 @@ postRouter.get("/post/:postId", userAuth, async (req, res) => {
           createdAt: 1,
           likedBy: 1,
           replies: 1,
+          "likedByDetails":1,
           "postedBy.firstName": 1,
           "postedBy.lastName": 1,
           "postedBy.userName": 1,

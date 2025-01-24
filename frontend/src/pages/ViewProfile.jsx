@@ -157,7 +157,7 @@ const ViewProfile = () => {
         </div>
 
         {profile && profile.posts.length > 0 && (
-          <div className="mx-72 grid grid-cols-2 md:grid-cols-4 bg-gradient-to-r from-blue-100 to-indigo-200 p-4 rounded-lg shadow-lg">
+          <div className="md:mx-72 grid grid-cols-2 md:grid-cols-4 bg-gradient-to-r from-blue-100 to-indigo-200 p-4 rounded-lg shadow-lg">
             {profile.posts.map((post) => (
               <div
                 key={post._id}
