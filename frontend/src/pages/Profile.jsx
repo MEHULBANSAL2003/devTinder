@@ -34,6 +34,7 @@ const Profile = () => {
       });
 
       if (response.data.result === "success") {
+        sessionStorage.removeItem("user");
         setUser(response.data.data);
       }
     } catch (err) {
@@ -78,7 +79,7 @@ const Profile = () => {
 
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, [user]);
 
   const handleEditProfile = () => {
     navigate("/profile/edit");
@@ -182,6 +183,7 @@ const Profile = () => {
       toast.error(err?.response?.data?.message || "something went wrong");
     } finally {
       setLoading(false);
+      fetchUser();
     }
   };
 
