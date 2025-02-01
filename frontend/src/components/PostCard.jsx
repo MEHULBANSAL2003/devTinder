@@ -275,7 +275,7 @@ const PostCard = ({ post, closeButton, deleteOption }) => {
               <p className="font-semibold text-md mt-1">Liked By</p>
               <p className="mx-3 mt-1 font-bold">
                 {likedByDetails[0].firstName + " " + likedByDetails[0].lastName}{" "}
-                and others
+               {likedByDetails.length>1 && "and others"}
               </p>
             </div>
           )}
