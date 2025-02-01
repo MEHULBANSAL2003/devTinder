@@ -17,7 +17,6 @@ const PostCard = ({ post, closeButton, deleteOption }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showLikedByModal, setShowLikedByModal] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const { postedBy, imageUrl, createdAt, likedBy, likedByDetails } = post;
   const [likeCount, setLikeCount] = useState(likedBy.length);
   const formattedDate = formatDistanceToNow(new Date(createdAt), {
@@ -44,7 +43,6 @@ const PostCard = ({ post, closeButton, deleteOption }) => {
       setIsLiked(false);
     }
   }, []);
-  console.log(likedByDetails);
 
   const handleLike = async () => {
     try {
@@ -118,7 +116,6 @@ const PostCard = ({ post, closeButton, deleteOption }) => {
     }
   };
 
-  console.log(post);
   if (loading) return <Loader />;
 
   return (
